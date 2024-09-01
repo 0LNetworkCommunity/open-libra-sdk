@@ -1,5 +1,5 @@
 {
-  "name": "libra-api-tools",
+  "name": "libra-ts-sdk",
   "module": "index.ts",
   "type": "module",
   "scripts": {
