@@ -2,15 +2,15 @@
   "compilerOptions": {
     // Enable latest features
     "lib": ["ESNext", "DOM"],
-    "target": "es2020", // set to the *lowest* target supported
-    "module": "node16",
+    "target": "ESNext", // set to the *lowest* target supported
+    "module": "ESNext",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
 
     // Bundler mode
     // from: https://www.typescriptlang.org/docs/handbook/modules/guides/choosing-compiler-options.html
-    "moduleResolution": "node16", // allow run in node and bundlers
+    "moduleResolution": "bundler", // allow run in node and bundlers
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
