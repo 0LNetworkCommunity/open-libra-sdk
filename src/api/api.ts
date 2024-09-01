@@ -3,32 +3,117 @@ import type { EventObj, ViewObj } from '../payloads/types'
 import { TESTNET_SEED_NODES } from '../constants'
 
 const DEBUG_URL: string = 'http://rpc.0l.fyi/v1'
+export class LibraClient {
+  url: string;
+  note: string;
+  clientInit: boolean;
+  connected: boolean;
+  client: AxiosInstance;
 
-export let api: AxiosInstance
-let apiUrl: string;
-let apiUrlNote: string;
-let apiReady: boolean;
+  constructor(url?: string, note?: string) {
+    this.url = url ? url : DEBUG_URL;
+    this.note = note ? note : this.url;
+    this.clientInit = false;
+    this.connected = false;
+    this.client = axios.create({
+      baseURL: this.url,
+    })
+  }
+  async setClient(url?: string): Promise<void> {
+    this.client = axios.create({
+      baseURL: url ? url : this.url,
+    })
+    this.clientInit = true
+  }
 
-export const initApi = async () => {
-  const { url, note } = await fetchAPIConfig()
+  async searchSeedFullnodes(): Promise<void> {
+    try {
+      const response = await axios.get(TESTNET_SEED_NODES)
+      const data = response.data
 
-  api = axios.create({
-    baseURL: url,
-  })
-  apiUrl = url
-  apiUrlNote = note
-  apiReady = true
+      for (const node of data.nodes) {
+        const formatted_u = `${node.url}/v1`
+        const isConnected = await checkAPIConnectivity(formatted_u)
 
-  return { apiUrl, note }
-}
+        if (isConnected) {
+          this.url = formatted_u
+          this.note = node.note
+          this.connected = true
+          this.clientInit = false // need to reset
+          this.setClient()
+          break
+        }
+      }
+      if (!this.connected || !this.clientInit) {
+        console.error('Failed to connect to any API URL.')
+      }
 
-// Overrides the API http address with user defined URL string
-export const overrideApi = (url: string) => {
-  api = axios.create({
-    baseURL: url,
-  })
-  apiUrl = url
-  apiUrlNote = 'override'
+    } catch (error) {
+      console.error(`Failed to fetch API config: ${error}`)
+    }
+  }
+
+  check() {
+    if (!this.client) {
+      throw "no client initialized"
+    }
+    if (!this.connected) {
+      throw "client is not connected"
+    }
+  }
+
+  // Gets the Diem API root with chain metadata
+  async getIndex() {
+    try {
+      const response = await this.client.get('')
+      return response.data
+    } catch (error: any) {
+      console.error(`Failed to get index: ${error.message}`)
+      throw error
+    }
+  }
+
+  // Retrieves a Move resource on any account given the resource's "struct path" string. Uses GET to API.
+  async getAccountResource(account: string, struct_path: string) {
+
+    this.check();
+
+    return await this.client
+      .get(`/accounts/${account}/resource/${struct_path}`)
+      .then((r: { data: { data: any } }) => r.data.data)
+      .catch((e: { message: any }) => {
+        console.error(`Failed to get resource ${struct_path}, message: ${e.message}`)
+        throw e
+      })
+  }
+
+
+  // Calls a "view" function on the chain via POST to API
+  async postViewFunc(payload: ViewObj): Promise<any[]> {
+    return await this.client
+      .post('/view', payload)
+      .then((r: { data: any[] }) => {
+        return r.data
+      })
+      .catch((e: { message: any }) => {
+        console.error(
+          `Failed to get view fn: ${payload.function}, args: ${payload.arguments} message: ${e.message}`,
+        )
+        throw e
+      })
+  }
+  // Retrieves a list of events from an account via GET to API
+  async getEventList(payload: EventObj) {
+    return await this.client
+      .get(`/accounts/${payload.address}/events/${payload.struct}/${payload.handler_field}`)
+      .then((r: { data: any }) => {
+        return r.data
+      })
+      .catch((e: { message: any }) => {
+        console.error(`Failed to get events ${payload}, message: ${e.message}`)
+        throw e
+      })
+  }
 }
 
 // Checks that the URL used for API is live
@@ -39,87 +124,4 @@ async function checkAPIConnectivity(url: string) {
   } catch (error) {
     return false
   }
-}
-
-// Creates the axios configuration for network requests
-const fetchAPIConfig = async () => {
-  let url = DEBUG_URL
-  let note
-
-  if (!url) {
-    try {
-      const response = await axios.get(TESTNET_SEED_NODES)
-      const data = response.data
-
-      for (const node of data.nodes) {
-        const formatted_u = `${node.url}/v1`
-        const isConnected = await checkAPIConnectivity(formatted_u)
-
-        if (isConnected) {
-          url = formatted_u
-          note = node.note
-          break
-        }
-      }
-
-      if (!url) {
-        console.error('Failed to connect to any API URL.')
-      }
-    } catch (error) {
-      console.error(`Failed to fetch API config: ${error}`)
-    }
-  }
-
-  return { url, note }
-}
-
-// Retrieves a Move resource on any account given the resource's "struct path" string. Uses GET to API.
-export const getAccountResource = async (account: string, struct_path: string) => {
-  return await api
-    .get(`/accounts/${account}/resource/${struct_path}`)
-    .then((r: { data: { data: any } }) => r.data.data)
-    .catch((e: { message: any }) => {
-      console.error(`Failed to get resource ${struct_path}, message: ${e.message}`)
-      throw e
-    })
-}
-
-// Gets the Diem API root with chain metadata
-export const getIndex = async () => {
-  try {
-    const response = await api.get('')
-    return response.data
-  } catch (error: any) {
-    console.error(`Failed to get index: ${error.message}`)
-    throw error
-  }
-}
-
-// Calls a "view" function on the chain via POST to API
-export const postViewFunc = async (payload: ViewObj): Promise<any[]> => {
-  return await api
-    .post('/view', payload)
-    .then((r: { data: any[] }) => {
-      return r.data
-    })
-    .catch((e: { message: any }) => {
-      console.error(
-        `Failed to get view fn: ${payload.function}, args: ${payload.arguments} message: ${e.message}`,
-      )
-      throw e
-    })
-}
-
-
-// Retrieves a list of events from an account via GET to API
-export const getEventList = async (payload: EventObj) => {
-  return await api
-    .get(`/accounts/${payload.address}/events/${payload.struct}/${payload.handler_field}`)
-    .then((r: { data: any }) => {
-      return r.data
-    })
-    .catch((e: { message: any }) => {
-      console.error(`Failed to get events ${payload}, message: ${e.message}`)
-      throw e
-    })
 }
