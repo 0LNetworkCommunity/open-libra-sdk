@@ -34,7 +34,7 @@ export class LibraClient {
 
       for (const node of data.nodes) {
         const formatted_u = `${node.url}/v1`
-        const isConnected = await this.checkAPIConnectivity(formatted_u)
+        const isConnected = await this.connect(formatted_u)
 
         if (isConnected) {
           this.url = formatted_u
@@ -64,7 +64,7 @@ export class LibraClient {
   }
 
   // Checks that the URL used for API is live
-  async checkAPIConnectivity(url?: string): Promise<boolean> {
+  async connect(url?: string): Promise<boolean> {
     try {
       const u = url? url : this.url
       await axios.head(u)

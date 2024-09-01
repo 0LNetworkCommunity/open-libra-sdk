@@ -4,7 +4,7 @@ import { currentValidators } from "../sugar/validatorHelpers";
 
 console.log("Calling Libra Explorer API");
 let client = new LibraClient();
-await client.checkAPIConnectivity();
+await client.connect();
 client.assertReady();
 
 
