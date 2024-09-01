@@ -13,12 +13,13 @@ export class LibraClient {
   constructor(url?: string, note?: string) {
     this.url = url ? url : DEBUG_URL;
     this.note = note ? note : this.url;
-    this.clientInit = false;
     this.connected = false;
     this.client = axios.create({
       baseURL: this.url,
     })
+    this.clientInit = true;
   }
+
   async setClient(url?: string): Promise<void> {
     this.client = axios.create({
       baseURL: url ? url : this.url,
@@ -33,7 +34,7 @@ export class LibraClient {
 
       for (const node of data.nodes) {
         const formatted_u = `${node.url}/v1`
-        const isConnected = await checkAPIConnectivity(formatted_u)
+        const isConnected = await this.checkAPIConnectivity(formatted_u)
 
         if (isConnected) {
           this.url = formatted_u
@@ -53,12 +54,25 @@ export class LibraClient {
     }
   }
 
-  check() {
+  assertReady() {
     if (!this.client) {
       throw "no client initialized"
     }
     if (!this.connected) {
       throw "client is not connected"
+    }
+  }
+
+  // Checks that the URL used for API is live
+  async checkAPIConnectivity(url?: string): Promise<boolean> {
+    try {
+      const u = url? url : this.url
+      await axios.head(u)
+      this.connected = true
+      return true
+    } catch (error) {
+      this.connected = false
+      return false
     }
   }
 
@@ -76,7 +90,7 @@ export class LibraClient {
   // Retrieves a Move resource on any account given the resource's "struct path" string. Uses GET to API.
   async getAccountResource(account: string, struct_path: string) {
 
-    this.check();
+    this.assertReady();
 
     return await this.client
       .get(`/accounts/${account}/resource/${struct_path}`)
@@ -113,15 +127,5 @@ export class LibraClient {
         console.error(`Failed to get events ${payload}, message: ${e.message}`)
         throw e
       })
-  }
-}
-
-// Checks that the URL used for API is live
-async function checkAPIConnectivity(url: string) {
-  try {
-    await axios.head(url)
-    return true
-  } catch (error) {
-    return false
   }
 }

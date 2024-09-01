@@ -1,14 +1,18 @@
-import { getIndex, initApi, postViewFunc } from "../api/api";
+import { LibraClient } from "../api/api";
 import { currentValidatorsPayload } from "../payloads/validators";
-import { currentVals } from "../sugar/validatorHelpers";
+import { currentValidators } from "../sugar/validatorHelpers";
 
 console.log("Calling Libra Explorer API");
-await initApi();
-let res = await getIndex();
+let client = new LibraClient();
+await client.checkAPIConnectivity();
+client.assertReady();
+
+
+let res = await client.getIndex();
 console.log(res);
 
-let p = await postViewFunc(currentValidatorsPayload);
+let p = await client.postViewFunc(currentValidatorsPayload);
 console.log(p);
-console.log(p.length);
-let vals = await currentVals();
+
+let vals = await currentValidators(client);
 console.log(vals);
