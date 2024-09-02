@@ -18,6 +18,8 @@ export const validatorBidPayload = (address: string): ViewObj => ({
   arguments: [address],
 })
 
+// TODO: get expiration
+
 export const validatorGradePayload = (address: string): ViewObj => ({
   function: '0x1::grade::get_validator_grade',
   type_arguments: [],
@@ -32,6 +34,21 @@ export const allVouchersPayload = (address: string): ViewObj => ({
 
 export const vouchersInSetPayload = (address: string): ViewObj => ({
   function: '0x1::vouch::true_friends',
+  type_arguments: [],
+  arguments: [address],
+})
+
+// returns two arrays address[] expiration[]
+
+export const vouchesGiven = (address: string): ViewObj => ({
+  function: '0x1::vouch::get_given_vouches',
+  type_arguments: [],
+  arguments: [address],
+})
+
+// returns two arrays address[] expiration[]
+export const vouchesReceived = (address: string): ViewObj => ({
+  function: '0x1::vouch::get_given_vouches',
   type_arguments: [],
   arguments: [address],
 })
