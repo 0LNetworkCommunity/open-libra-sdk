@@ -2,7 +2,7 @@ import axios, { type AxiosInstance } from 'axios'
 import type { EventObj, ViewObj } from '../payloads/types'
 import { TESTNET_SEED_NODES } from '../constants'
 
-const DEBUG_URL: string = 'http://rpc.0l.fyi/v1'
+const DEBUG_URL: string = 'https://rpc.0l.fyi/v1'
 export class LibraClient {
   url: string;
   note: string;
