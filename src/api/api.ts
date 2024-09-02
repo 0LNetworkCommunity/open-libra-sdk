@@ -83,6 +83,7 @@ export class LibraClient {
       return response.data
     } catch (error: any) {
       console.error(`Failed to get index: ${error.message}`)
+      // throw because if we can't get index, nothing else is possible
       throw error
     }
   }
@@ -96,36 +97,38 @@ export class LibraClient {
       .get(`/accounts/${account}/resource/${struct_path}`)
       .then((r: { data: { data: any } }) => r.data.data)
       .catch((e: { message: any }) => {
-        console.error(`Failed to get resource ${struct_path}, message: ${e.message}`)
-        throw e
+        const errMsg = `Failed to get resource ${struct_path}, message: ${e.message}`
+        console.error(errMsg)
       })
   }
 
 
   // Calls a "view" function on the chain via POST to API
   async postViewFunc(payload: ViewObj): Promise<any[]> {
+    this.assertReady();
+
     return await this.client
       .post('/view', payload)
       .then((r: { data: any[] }) => {
         return r.data
       })
       .catch((e: { message: any }) => {
-        console.error(
-          `Failed to get view fn: ${payload.function}, args: ${payload.arguments} message: ${e.message}`,
-        )
-        throw e
+        const errMsg = `Failed to get view fn: ${payload.function}, args: ${payload.arguments} message: ${e.message}`
+        console.error(errMsg)
       })
   }
   // Retrieves a list of events from an account via GET to API
   async getEventList(payload: EventObj) {
+    this.assertReady();
+
     return await this.client
       .get(`/accounts/${payload.address}/events/${payload.struct}/${payload.handler_field}`)
       .then((r: { data: any }) => {
         return r.data
       })
       .catch((e: { message: any }) => {
-        console.error(`Failed to get events ${payload}, message: ${e.message}`)
-        throw e
+        const errMsg = `Failed to get events ${payload}, message: ${e.message}`
+        console.error(errMsg)
       })
   }
 }
