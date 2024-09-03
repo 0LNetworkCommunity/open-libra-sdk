@@ -104,7 +104,7 @@ export class LibraClient {
 
 
   // Calls a "view" function on the chain via POST to API
-  async postViewFunc(payload: ViewObj): Promise<any[]> {
+  async postViewFunc(payload: ViewObj): Promise<any[] | undefined> {
     this.assertReady();
 
     return await this.client
@@ -115,6 +115,7 @@ export class LibraClient {
       .catch((e: { message: any }) => {
         const errMsg = `Failed to get view fn: ${payload.function}, args: ${payload.arguments} message: ${e.message}`
         console.error(errMsg)
+        return undefined
       })
   }
   // Retrieves a list of events from an account via GET to API

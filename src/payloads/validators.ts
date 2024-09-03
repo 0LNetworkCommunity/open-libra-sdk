@@ -52,3 +52,19 @@ export const vouchesReceived = (address: string): ViewObj => ({
   type_arguments: [],
   arguments: [address],
 })
+
+export const getPoFBidders = (filter_unqualified: boolean): ViewObj => {
+  return {
+    function: '0x1::proof_of_fee::get_bidders_and_bids',
+    type_arguments: [],
+    arguments: [filter_unqualified],
+  }
+}
+
+export const getPoFErrors = (address: string): ViewObj => {
+  return {
+    function: '0x1::proof_of_fee::audit_qualification',
+    type_arguments: [],
+    arguments: [address],
+  }
+}
