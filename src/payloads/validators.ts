@@ -32,22 +32,30 @@ export const allVouchersPayload = (address: string): ViewObj => ({
   arguments: [address],
 })
 
-export const vouchersInSetPayload = (address: string): ViewObj => ({
-  function: '0x1::vouch::true_friends',
+// all vouches given out returns two arrays address[] expiration[]
+export const vouchesGiven = (address: string): ViewObj => ({
+  function: '0x1::vouch::get_given_vouches',
   type_arguments: [],
   arguments: [address],
 })
 
-// returns two arrays address[] expiration[]
-export const vouchesGiven = (address: string): ViewObj => ({
+// all vouches received, weather or not they are valid two arrays address[] expiration[]
+export const vouchesReceived = (address: string): ViewObj => ({
   function: '0x1::vouch::get_received_vouches',
   type_arguments: [],
   arguments: [address],
 })
 
-// returns two arrays address[] expiration[]
-export const vouchesReceived = (address: string): ViewObj => ({
-  function: '0x1::vouch::get_given_vouches',
+// get all vouches received and filter out expired ones
+export const vouchesReceivedNotExpired = (address: string): ViewObj => ({
+  function: '0x1::vouch::all_not_expired',
+  type_arguments: [],
+  arguments: [address],
+})
+
+// removes expired vouches, and vouches from family members
+export const vouchesReceivedValidNotFamily = (address: string): ViewObj => ({
+  function: '0x1::vouch::true_friends',
   type_arguments: [],
   arguments: [address],
 })
