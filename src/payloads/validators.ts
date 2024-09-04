@@ -39,9 +39,8 @@ export const vouchersInSetPayload = (address: string): ViewObj => ({
 })
 
 // returns two arrays address[] expiration[]
-
 export const vouchesGiven = (address: string): ViewObj => ({
-  function: '0x1::vouch::get_given_vouches',
+  function: '0x1::vouch::get_received_vouches',
   type_arguments: [],
   arguments: [address],
 })
