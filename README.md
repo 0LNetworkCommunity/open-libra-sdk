@@ -15,11 +15,8 @@ https://bun.sh/docs/installation
 bun install
 ```
 
-### To run demos:
-This library does not have any operational tools or reports. You can run some demos from command line.
+### To run tests:
 
 ```bash
-bun run demos/validatorReport/index.ts
+bun test
 ```
-
-This project was created using `bun init` in bun v1.1.26. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
