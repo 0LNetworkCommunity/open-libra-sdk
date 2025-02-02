@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  bun-check:
+  bun-sanity:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository
