@@ -44,3 +44,10 @@ export function mnemonicToAuthKey(mnemonic: string) {
     privateKeyToPublicKey(mnemonicToPrivateKey(mnemonic)),
   );
 }
+
+
+// interface AptosAccountObject {
+//   address?: HexEncodedBytes;
+//   publicKeyHex?: HexEncodedBytes;
+//   privateKeyHex: HexEncodedBytes;
+// }
