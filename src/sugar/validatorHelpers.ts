@@ -9,7 +9,7 @@ export const currentValidators = async (client: LibraClient): Promise<string[]> 
 
   const res = await client.postViewFunc(currentValidatorsPayload);
   if (res.length == 1) {
-    let list: string[] = res[0];
+    const list: string[] = res[0];
     return list
   } else {
     throw "API error, no validator array found"

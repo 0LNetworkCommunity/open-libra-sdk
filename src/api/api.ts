@@ -2,7 +2,7 @@ import axios, { type AxiosInstance } from 'axios'
 import type { EventObj, ViewObj } from '../payloads/types'
 import { TESTNET_SEED_NODES } from '../constants'
 
-const DEBUG_URL: string = 'https://rpc.0l.fyi/v1'
+const DEBUG_URL: string = 'https://rpc.scan.openlibra.world/v1'
 export class LibraClient {
   url: string;
   note: string;
@@ -70,7 +70,7 @@ export class LibraClient {
       await axios.head(u)
       this.connected = true
       return true
-    } catch (error) {
+    } catch {
       this.connected = false
       return false
     }
@@ -81,7 +81,7 @@ export class LibraClient {
     try {
       const response = await this.client.get('')
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       console.error(`Failed to get index: ${error.message}`)
       // throw because if we can't get index, nothing else is possible
       throw error
@@ -95,8 +95,8 @@ export class LibraClient {
 
     return await this.client
       .get(`/accounts/${account}/resource/${struct_path}`)
-      .then((r: { data: { data: any } }) => r.data.data)
-      .catch((e: { message: any }) => {
+      .then((r: { data: { data } }) => r.data.data)
+      .catch((e: { message }) => {
         const errMsg = `Failed to get resource ${struct_path}, message: ${e.message}`
         console.error(errMsg)
       })
@@ -104,15 +104,15 @@ export class LibraClient {
 
 
   // Calls a "view" function on the chain via POST to API
-  async postViewFunc(payload: ViewObj): Promise<any[] | undefined> {
+  async postViewFunc(payload: ViewObj): Promise<[] | undefined> {
     this.assertReady();
 
     return await this.client
       .post('/view', payload)
-      .then((r: { data: any[] }) => {
+      .then((r: { data }) => {
         return r.data
       })
-      .catch((e: { message: any }) => {
+      .catch((e: { message }) => {
         const errMsg = `Failed to get view fn: ${payload.function}, args: ${payload.arguments} message: ${e.message}`
         console.error(errMsg)
         return undefined
@@ -124,10 +124,10 @@ export class LibraClient {
 
     return await this.client
       .get(`/accounts/${payload.address}/events/${payload.struct}/${payload.handler_field}`)
-      .then((r: { data: any }) => {
+      .then((r: { data }) => {
         return r.data
       })
-      .catch((e: { message: any }) => {
+      .catch((e: { message }) => {
         const errMsg = `Failed to get events ${payload}, message: ${e.message}`
         console.error(errMsg)
       })
