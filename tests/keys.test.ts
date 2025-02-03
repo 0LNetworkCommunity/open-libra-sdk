@@ -1,17 +1,30 @@
 import { expect, test } from "bun:test";
 import {
-  checkMnemList,
+  isMnemString,
   deriveLegacyAddress,
   mnemonicToAccountObj,
   mnemonicToEd25519PrivateKey,
   mnemonicToPrivateKey,
   privateKeyToPublicKey,
   publicKeyToAuthKey,
+  generateMnemonic,
 } from "../src/crypto/keyFactory";
 import { ALICE_MNEM } from "./fixture_mnemonics";
 
+
+test("keygen mnemonic", async () => {
+  let mnem = generateMnemonic();
+  const is_good = isMnemString(mnem);
+
+  expect(is_good).toBe(true);
+
+  let mnem2 = generateMnemonic();
+  expect(mnem == mnem2).toBe(false)
+
+})
+
 test("bad mnemonic to pri key should fail", async () => {
-  const is_good = checkMnemList("test should fail");
+  const is_good = isMnemString("test should fail");
   expect(is_good).toBe(false);
 
   expect(() => {

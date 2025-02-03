@@ -3,9 +3,9 @@ import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { sha3_256 } from '@noble/hashes/sha3';
 import { ed25519 } from '@noble/curves/ed25519';
 import { AccountAddress, Ed25519Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
-import { validateMnemonic } from '@scure/bip39';
+import { entropyToMnemonic, validateMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
-
+import { webcrypto } from 'node:crypto'
 
 
 // Seed generation salting
@@ -29,14 +29,24 @@ const MAIN_KEY_SALT = Buffer.from(
 );
 
 
-export function checkMnemList(mnemonic: string): boolean {
+//////// RECOVERING ACCOUNTS ////////
+
+// checks if the mnemonic string is valid
+export function isMnemString(mnemonic: string): boolean {
   // Validates mnemonic for being 12-24 words contained in `wordlist`.
   return validateMnemonic(mnemonic, wordlist)
 }
-export function mnemonicToPrivateKey(mnemonic: string): Uint8Array {
-  if (!checkMnemList(mnemonic)) {
+
+// throw error if bad mnemonic
+function checkMnem(mnemonic: string) {
+  if (!isMnemString(mnemonic)) {
     throw "ERROR: not a valid mnemonic string"
   }
+}
+
+
+export function mnemonicToPrivateKey(mnemonic: string): Uint8Array {
+  checkMnem(mnemonic)
 
   const ikm = pbkdf2(sha3_256, mnemonic, MNEMONIC_SALT_PREFIX, {
     c: 2048,
@@ -56,11 +66,14 @@ export function publicKeyToAuthKey(publicKey: Uint8Array): Uint8Array {
 }
 
 export function mnemonicToAuthKey(mnemonic: string) {
+  checkMnem(mnemonic)
+
   return publicKeyToAuthKey(
     privateKeyToPublicKey(mnemonicToPrivateKey(mnemonic)),
   );
 }
 
+// OL legacy addresses (Pre V5) were only 32 bytes, the last 16 digits of an authkey
 export function deriveLegacyAddress(authKey: Uint8Array): Uint8Array {
   const lastHalf = authKey.slice(16)
   return lastHalf
@@ -83,4 +96,18 @@ export function mnemonicToAccountObj(mnemonic: string): Ed25519Account {
     privateKey,
     address
   })
+}
+
+//////// CREATING ACCOUNTS ////////
+
+function getEntropyBytes(): Uint8Array {
+  const buffer = new Uint8Array(32);
+  webcrypto.getRandomValues(buffer)
+  return buffer
+}
+
+export function generateMnemonic(): string {
+  const ent = getEntropyBytes();
+  let mnem = entropyToMnemonic(ent, wordlist);
+  return mnem
 }
