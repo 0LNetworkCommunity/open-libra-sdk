@@ -3,8 +3,8 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "lint": "eslint && prettier --check ./**/*.ts",
-    "format": "eslint --fix && prettier --no-config --write ./**/*.ts",
+    "lint": "eslint ./src && eslint ./tests && prettier --check ./**/*.ts",
+    "format": "eslint ./src --fix && eslint ./tests --fix && prettier --no-config --write ./**/*.ts",
     "release": "bun build ./src/index.ts --minify --outfile ./dist/index.js"
   },
   "devDependencies": {
