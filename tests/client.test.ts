@@ -1,4 +1,4 @@
-import { test } from "bun:test";
+import { expect, test } from "bun:test";
 import { LibraClient } from "../src/api/api";
 import { currentValidatorsPayload } from "../src/payloads/validators";
 
@@ -9,8 +9,10 @@ test("can get validators", async () => {
   client.assertReady();
 
   const res = await client.getIndex();
-  console.log(res);
+
+  expect(res.chain_id).toBe(1);
 
   const p = await client.postViewFunc(currentValidatorsPayload);
-  console.log(p);
+  console.log(p[0].length);
+  expect(p[0].length).toBeGreaterThan(1);
 });
