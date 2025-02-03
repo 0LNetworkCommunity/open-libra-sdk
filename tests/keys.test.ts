@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import {
+  checkMnemList,
   deriveLegacyAddress,
   mnemonicToAccountObj,
   mnemonicToEd25519PrivateKey,
@@ -9,12 +10,14 @@ import {
 } from "../src/crypto/keyFactory";
 import { ALICE_MNEM } from "./fixture_mnemonics";
 
-// test("bad mnemonic to pri key should fail", async () => {
-//   const pri_bytes = mnemonicToPrivateKey("test");
-//   console.log(pri_bytes.toLocaleString())
-//   const pubkey = privateKeyToPublicKey(pri_bytes);
-//   // console.log(pubkey);
-// });
+test("bad mnemonic to pri key should fail", async () => {
+  const is_good = checkMnemList("test should fail");
+  expect(is_good).toBe(false);
+
+  expect(() => {
+    mnemonicToPrivateKey("not a mnemonic string");
+  }).toThrow();
+});
 
 test("good mnemonic to pri key", async () => {
   const pri_bytes = mnemonicToPrivateKey(ALICE_MNEM);

@@ -22,6 +22,7 @@
     "@aptos-labs/ts-sdk": "^1.33.2",
     "@noble/curves": "^1.8.1",
     "@noble/hashes": "^1.7.1",
+    "@scure/bip39": "^1.5.4",
     "axios": "^1.7.9"
   }
 }

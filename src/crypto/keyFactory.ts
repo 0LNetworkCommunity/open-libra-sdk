@@ -3,6 +3,12 @@ import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { sha3_256 } from '@noble/hashes/sha3';
 import { ed25519 } from '@noble/curves/ed25519';
 import { AccountAddress, Ed25519Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
+import { validateMnemonic } from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english';
+
+
+
+// Seed generation salting
 
 const INFO_PREFIX = Buffer.concat([
   Buffer.from(
@@ -22,7 +28,16 @@ const MAIN_KEY_SALT = Buffer.from(
   'ascii',
 );
 
+
+export function checkMnemList(mnemonic: string): boolean {
+  // Validates mnemonic for being 12-24 words contained in `wordlist`.
+  return validateMnemonic(mnemonic, wordlist)
+}
 export function mnemonicToPrivateKey(mnemonic: string): Uint8Array {
+  if (!checkMnemList(mnemonic)) {
+    throw "ERROR: not a valid mnemonic string"
+  }
+
   const ikm = pbkdf2(sha3_256, mnemonic, MNEMONIC_SALT_PREFIX, {
     c: 2048,
     dkLen: 32,
@@ -69,10 +84,3 @@ export function mnemonicToAccountObj(mnemonic: string): Ed25519Account {
     address
   })
 }
-
-
-// interface AptosAccountObject {
-//   address?: HexEncodedBytes;
-//   publicKeyHex?: HexEncodedBytes;
-//   privateKeyHex: HexEncodedBytes;
-// }
