@@ -1,4 +1,4 @@
-name: lint
+name: test
 
 on:
   schedule:
@@ -9,19 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  bun-sanity:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup repository
-        uses: actions/checkout@v4
-
-      - name: install bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Installs UI packages
-        run: bun install
-
-  eslint:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository
