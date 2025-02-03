@@ -11,17 +11,15 @@ import {
 } from "../src/crypto/keyFactory";
 import { ALICE_MNEM } from "./fixture_mnemonics";
 
-
 test("keygen mnemonic", async () => {
-  let mnem = generateMnemonic();
+  const mnem = generateMnemonic();
   const is_good = isMnemString(mnem);
 
   expect(is_good).toBe(true);
 
-  let mnem2 = generateMnemonic();
-  expect(mnem == mnem2).toBe(false)
-
-})
+  const mnem2 = generateMnemonic();
+  expect(mnem == mnem2).toBe(false);
+});
 
 test("bad mnemonic to pri key should fail", async () => {
   const is_good = isMnemString("test should fail");

@@ -108,6 +108,6 @@ function getEntropyBytes(): Uint8Array {
 
 export function generateMnemonic(): string {
   const ent = getEntropyBytes();
-  let mnem = entropyToMnemonic(ent, wordlist);
+  const mnem = entropyToMnemonic(ent, wordlist);
   return mnem
 }
