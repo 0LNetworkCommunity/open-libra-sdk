@@ -2,6 +2,7 @@ import * as hkdf from '@noble/hashes/hkdf';
 import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { sha3_256 } from '@noble/hashes/sha3';
 import { ed25519 } from '@noble/curves/ed25519';
+import { AccountAddress, Ed25519Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 
 const INFO_PREFIX = Buffer.concat([
   Buffer.from(
@@ -43,6 +44,30 @@ export function mnemonicToAuthKey(mnemonic: string) {
   return publicKeyToAuthKey(
     privateKeyToPublicKey(mnemonicToPrivateKey(mnemonic)),
   );
+}
+
+export function deriveLegacyAddress(authKey: Uint8Array): Uint8Array {
+  const lastHalf = authKey.slice(16)
+  return lastHalf
+}
+
+export function mnemonicToEd25519PrivateKey(mnemonic: string): Ed25519PrivateKey {
+  const pk = mnemonicToPrivateKey(mnemonic)
+  return new Ed25519PrivateKey(pk)
+
+}
+
+export function mnemonicToAccountObj(mnemonic: string): Ed25519Account {
+  const privateKey = mnemonicToEd25519PrivateKey(mnemonic)
+
+  const authkey = mnemonicToAuthKey(mnemonic)
+
+  const acc = AccountAddress.from(authkey)
+
+  return new Ed25519Account({
+    privateKey,
+    address: authkey
+  })
 }
 
 
