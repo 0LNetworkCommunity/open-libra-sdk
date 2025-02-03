@@ -18,33 +18,41 @@ import { ALICE_MNEM } from "./fixture_mnemonics";
 
 test("good mnemonic to pri key", async () => {
   const pri_bytes = mnemonicToPrivateKey(ALICE_MNEM);
-  const pk_literal = Buffer.from(pri_bytes).toString('hex');
-  expect(pk_literal).toBe("74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b");
+  const pk_literal = Buffer.from(pri_bytes).toString("hex");
+  expect(pk_literal).toBe(
+    "74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b",
+  );
 
   const pubkey = privateKeyToPublicKey(pri_bytes);
-  const pubkey_string = Buffer.from(pubkey).toString('hex');
-  expect(pubkey_string).toBe("9b01701b040a91792f6e1c9003f633e1d39b02b72a54a4bba6296a70dddcf3ab")
+  const pubkey_string = Buffer.from(pubkey).toString("hex");
+  expect(pubkey_string).toBe(
+    "9b01701b040a91792f6e1c9003f633e1d39b02b72a54a4bba6296a70dddcf3ab",
+  );
 
   const auth = publicKeyToAuthKey(pubkey);
-  const auth_literal = Buffer.from(auth).toString('hex');
-  expect(auth_literal).toBe("87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5");
+  const auth_literal = Buffer.from(auth).toString("hex");
+  expect(auth_literal).toBe(
+    "87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
+  );
 
-  const address = deriveLegacyAddress(auth)
-  const addr_literal = Buffer.from(address).toString('hex');
+  const address = deriveLegacyAddress(auth);
+  const addr_literal = Buffer.from(address).toString("hex");
   expect(addr_literal).toBe("4c613c2f4b1e67ca8d98a542ee3f59f5");
 
   const pkobj = mnemonicToEd25519PrivateKey(ALICE_MNEM).toHexString();
-  expect(pkobj).toBe("0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b")
+  expect(pkobj).toBe(
+    "0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b",
+  );
 
-  const accObj = mnemonicToAccountObj(ALICE_MNEM)
+  const accObj = mnemonicToAccountObj(ALICE_MNEM);
 
-  expect(accObj.privateKey.toString()).toBe("0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b")
+  expect(accObj.privateKey.toString()).toBe(
+    "0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b",
+  );
 });
-
 
 // tests ported from rust:
 // https://github.com/0LNetworkCommunity/libra-framework/blob/16aef3af91160e1586170bafeb5acef08edc9c41/tools/wallet/src/account_keys.rs#L177
-
 
 // #[test]
 // fn test_legacy_keys() {
