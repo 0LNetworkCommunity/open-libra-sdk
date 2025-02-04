@@ -7,20 +7,21 @@ import {
 } from "../src/crypto/keyFactory";
 import { wrapLibra } from "../src/api/vendorClient";
 import { ALICE_MNEM } from "./fixture_mnemonics";
-import { getOriginatingAddress } from "../src/crypto/walletUtil";
+import { getOriginatingAddress } from "../src/wallet/walletUtil";
 import {
   generateSigningMessageForTransactionDiem,
   signTransactionDiem,
   signTransactionWithAuthenticatorDiem,
-  submitTransaction as submitTransactionDiem,
-} from "../src/crypto/txSigning";
+} from "../src/transaction/txSigning";
+import type { InputGenerateTransactionOptions } from "@aptos-labs/ts-sdk";
+import { submitTransactionDiem } from "../src/transaction/submit";
 
 test("can sign noop tx", async () => {
   const libra = wrapLibra();
 
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);
-  const onchainAddr = await getOriginatingAddress(authKey.toString());
+  const onchainAddr = await getOriginatingAddress(authKey);
 
   const marlon_addr = addressFromString("0x1234");
 
@@ -54,45 +55,55 @@ test("can sign noop tx", async () => {
   expect(ver).toBeTruthy();
 });
 
-test("can submit noop tx", async () => {
-  const libra = wrapLibra();
+test(
+  "can submit noop tx",
+  async () => {
+    const libra = wrapLibra();
 
-  const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
-  const authKey = publicKeyToAuthKey(alice_obj.publicKey);
-  const onchainAddr = await getOriginatingAddress(authKey.toString());
+    const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
+    const authKey = publicKeyToAuthKey(alice_obj.publicKey);
+    const onchainAddr = await getOriginatingAddress(authKey);
 
-  const marlon_addr = addressFromString("0x1234");
+    const marlon_addr = addressFromString("0x37799DA327DB4C58D5E28E7DD6338F6B");
 
-  const transaction = await libra.transaction.build.simple({
-    sender: onchainAddr,
-    data: {
-      // All transactions on Aptos are implemented via smart contracts.
-      function: "0x1::ol_account::transfer",
-      functionArguments: [marlon_addr, 100],
-    },
-  });
+    const options: InputGenerateTransactionOptions = {
+      maxGasAmount: 40000,
+      gasUnitPrice: 100,
+    };
 
-  // 3. Sign
-  const authenticator = signTransactionWithAuthenticatorDiem(
-    alice_obj,
-    transaction,
-  );
+    const transaction = await libra.transaction.build.simple({
+      sender: onchainAddr,
+      data: {
+        // All transactions on Aptos are implemented via smart contracts.
+        function: "0x1::ol_account::transfer",
+        functionArguments: [marlon_addr, 100],
+      },
+      options,
+    });
 
-  // 4. Submit
-  const args = {
-    transaction: transaction,
-    senderAuthenticator: authenticator,
-  };
-  const submittedTransaction = await submitTransactionDiem({
-    aptosConfig: aptos.config,
-    ...args,
-  });
+    // 3. Sign
+    const authenticator = signTransactionWithAuthenticatorDiem(
+      alice_obj,
+      transaction,
+    );
 
-  console.log(`Submitted transaction hash: ${submittedTransaction.hash}`);
+    // 4. Submit
+    const args = {
+      transaction: transaction,
+      senderAuthenticator: authenticator,
+    };
+    const submittedTransaction = await submitTransactionDiem({
+      aptosConfig: libra.config,
+      ...args,
+    });
 
-  // 5. Wait for results
-  const executedTransaction = await libra.waitForTransaction({
-    transactionHash: submittedTransaction.hash,
-  });
-  console.log(executedTransaction);
-});
+    console.log(`Submitted transaction hash: ${submittedTransaction.hash}`);
+
+    // 5. Wait for results
+    const executedTransaction = await libra.waitForTransaction({
+      transactionHash: submittedTransaction.hash,
+    });
+    expect(executedTransaction.success).toBeTrue();
+  },
+  { timeout: 10_000 },
+);
