@@ -35,8 +35,6 @@ test("can sign noop tx", async () => {
   });
 
   // 3. Sign
-  console.log("\n=== 3. Signing transaction ===\n");
-
   const message = generateSigningMessageForTransactionDiem(transaction);
 
   const signature = signTransactionDiem(alice_obj, transaction);

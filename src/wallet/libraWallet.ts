@@ -1,8 +1,9 @@
-import type { AccountAddress, AccountAuthenticatorEd25519, AnyRawTransaction, CommittedTransactionResponse, Ed25519Account, InputGenerateTransactionOptions } from "@aptos-labs/ts-sdk";
+import type { AccountAddress, AccountAuthenticatorEd25519, AnyRawTransaction, CommittedTransactionResponse, Ed25519Account, InputGenerateTransactionOptions, MoveFunctionId, SimpleEntryFunctionArgumentTypes, SimpleTransaction } from "@aptos-labs/ts-sdk";
 import { mnemonicToAccountObj } from "../crypto/keyFactory";
 import { signTransactionWithAuthenticatorDiem } from "../transaction/txSigning";
 import { submitAndWait } from "../transaction/submit";
 import { getOriginatingAddress } from "./walletUtil";
+import { wrapLibra } from "../api/vendorClient";
 
 /**
  * CryptoWallet class provides functionalities for handling a cryptocurrency wallet.
@@ -27,7 +28,7 @@ export class LibraWallet {
    */
   constructor(mnemonic: string) {
     this.account = mnemonicToAccountObj(mnemonic);
-    this.tx_options  =  {
+    this.tx_options = {
       maxGasAmount: 40000,
       gasUnitPrice: 100,
     }; // Default options
@@ -37,19 +38,14 @@ export class LibraWallet {
  * Requires connection to a fullnode, will check the actual address which this
  * authKey owns on chain.
  */
-  async set_originating_address() {
+  async sync_onchain() {
     this.onchainAddress = await getOriginatingAddress(this.account.publicKey.authKey())
   }
 
+  get_address(): AccountAddress {
+    return this.onchainAddress ?? this.account.accountAddress
+  }
 
-  // /**
-  //  * Signs a message using the account's private key.
-  //  * @param hexInput - The hex-encoded message to sign.
-  //  * @returns A signed message in string format.
-  //  */
-  // signMessage(hexInput: string): string {
-  //   return this.account.signMessage(hexInput);
-  // }
 
   /**
    * Signs a raw transaction using the account's private key.
@@ -58,21 +54,39 @@ export class LibraWallet {
    */
   signTransaction(transaction: AnyRawTransaction): AccountAuthenticatorEd25519 {
     return signTransactionWithAuthenticatorDiem(
-        this.account,
-        transaction,
+      this.account,
+      transaction,
     )
   }
 
-  // /**
-  //  * Verifies whether a given signature is valid for a provided message.
-  //  * @param hexInput - The hex-encoded message that was originally signed.
-  //  * @param signature - The cryptographic signature to verify.
-  //  * @returns A boolean indicating whether the signature is valid.
-  //  */
-  // verifySignature(hexInput: string, signature: string): boolean {
-  //   return this.account.verifySignature(hexInput, signature);
-  // }
 
+  /**
+   *
+   * @param entry_function address of the function e.g. "0x1::ol_account::transfer"
+   * @param args: list of simple serializable Move values e.g. [marlon_addr, 100]
+   */
+  async buildTransaction(entry_function: MoveFunctionId, args: Array<SimpleEntryFunctionArgumentTypes>): Promise<SimpleTransaction> {
+    const libra = wrapLibra();
+    return await libra.transaction.build.simple({
+      sender: this.onchainAddress,
+      data: {
+        function: entry_function,
+        functionArguments: args,
+      },
+      options: this.tx_options,
+    })
+  }
+  /**
+   * Simple transfer function between ordinary accounts
+   * @param recipient address of recipient
+   * @param amount non-decimal coin amount for transfer. Libra uses 6 decimal places. e.g. 1 coin = 1,000,000 amount
+   */
+  transfer(recipient: AccountAddress, amount: number) {
+    this.buildTransaction(
+      "0x1::ol_account::transfer",
+      [recipient.toString(), amount],
+    );
+  }
   /**
    * Submits a signed transaction to the blockchain network.
    * @param transaction - The raw transaction object that needs to be signed.
@@ -81,7 +95,9 @@ export class LibraWallet {
     transaction: AnyRawTransaction,
   ): Promise<CommittedTransactionResponse> {
     const signerAuthenticator = this.signTransaction(transaction);
-    return submitAndWait(transaction, signerAuthenticator)
+    return submitAndWait(transaction, signerAuthenticator).then((res) => {
+      console.log(`Transaction success: ${res.success}, vm_status: ${res.vm_status}`)
+      return res
+    })
   }
-
 }
