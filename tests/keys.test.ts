@@ -76,3 +76,14 @@ test("can derive authkey", async () => {
   const auth2 = publicKeyToAuthKey(alice_obj.publicKey);
   expect(auth2.toString()).toBe(auth.toString());
 });
+
+test("signs a message with single signer ed25519 scheme and verifies successfully", () => {
+  const messageEncoded = "68656c6c6f20776f726c64"; // "hello world"
+  const edAccount = mnemonicToAccountObj(ALICE_MNEM);
+
+  const signature = edAccount.sign(messageEncoded);
+
+  expect(
+    edAccount.verifySignature({ message: messageEncoded, signature }),
+  ).toBeTruthy();
+});

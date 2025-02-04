@@ -6,7 +6,8 @@ import { addressFromString } from "../crypto/keyFactory";
 
 export function wrapLibra(): Aptos {
   // 0. Setup the client and test accounts
-  const config = new AptosConfig({ network: Network.CUSTOM, fullnode: DEBUG_URL, faucet: DEBUG_URL });
+  const config = new AptosConfig({ network: Network.MAINNET, fullnode: DEBUG_URL })
+
   return new Aptos(config)
 }
 
