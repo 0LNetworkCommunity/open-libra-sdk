@@ -6,8 +6,9 @@ import {
   mnemonicToEd25519PrivateKey,
   mnemonicToPrivateKey,
   privateKeyToPublicKey,
-  publicKeyToAuthKey,
+  publicKeyBytesToAuthKey,
   generateMnemonic,
+  publicKeyToAuthKey,
 } from "../src/crypto/keyFactory";
 import { ALICE_MNEM } from "./fixture_mnemonics";
 
@@ -43,7 +44,7 @@ test("good mnemonic to pri key", async () => {
     "9b01701b040a91792f6e1c9003f633e1d39b02b72a54a4bba6296a70dddcf3ab",
   );
 
-  const auth = publicKeyToAuthKey(pubkey);
+  const auth = publicKeyBytesToAuthKey(pubkey);
   const auth_literal = Buffer.from(auth).toString("hex");
   expect(auth_literal).toBe(
     "87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
@@ -63,4 +64,15 @@ test("good mnemonic to pri key", async () => {
   expect(accObj.privateKey.toString()).toBe(
     "0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b",
   );
+});
+
+test("can derive authkey", async () => {
+  const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
+  const auth = alice_obj.publicKey.authKey();
+  expect(auth.toString()).toBe(
+    "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
+  );
+
+  const auth2 = publicKeyToAuthKey(alice_obj.publicKey);
+  expect(auth2.toString()).toBe(auth.toString());
 });

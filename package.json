@@ -1,5 +1,6 @@
 {
   "name": "libra-ts-sdk",
+  "license": "UNLICENSED",
   "module": "src/index.ts",
   "type": "module",
   "scripts": {

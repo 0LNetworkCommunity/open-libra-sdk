@@ -1,0 +1,21 @@
+/**
+ * This example shows how to use the Aptos SDK to send a transaction.
+ * Don't forget to install @aptos-labs/ts-sdk before running this example!
+ */
+
+import {
+  Account,
+  AccountAddress,
+  Aptos,
+  AptosConfig,
+  Network,
+} from "@aptos-labs/ts-sdk";
+import { DEBUG_URL } from "../api/api";
+import { addressFromString } from "./keyFactory";
+import { wrapLibra } from "../api/vendorClient";
+
+
+
+export async function example_tx() {
+
+};

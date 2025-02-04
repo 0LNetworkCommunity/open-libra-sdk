@@ -2,7 +2,7 @@ import * as hkdf from '@noble/hashes/hkdf';
 import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { sha3_256 } from '@noble/hashes/sha3';
 import { ed25519 } from '@noble/curves/ed25519';
-import { AccountAddress, Ed25519Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
+import { AccountAddress, AuthenticationKey, Ed25519Account, Ed25519PrivateKey, Ed25519PublicKey } from '@aptos-labs/ts-sdk'
 import { entropyToMnemonic, validateMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 import { webcrypto } from 'node:crypto'
@@ -60,15 +60,20 @@ export function privateKeyToPublicKey(privateKey: Uint8Array) {
   return ed25519.getPublicKey(privateKey);
 }
 
-export function publicKeyToAuthKey(publicKey: Uint8Array): Uint8Array {
+export function publicKeyBytesToAuthKey(publicKey: Uint8Array): Uint8Array {
   // Concatenate the public key with 0. 0 means Ed25519 which is the only Scheme supported for now.
   return sha3_256(new Uint8Array(Buffer.concat([publicKey, Buffer.from([0])])));
+}
+
+export function publicKeyToAuthKey(publicKey: Ed25519PublicKey): AuthenticationKey {
+  // Concatenate the public key with 0. 0 means Ed25519 which is the only Scheme supported for now.
+  return publicKey.authKey()
 }
 
 export function mnemonicToAuthKey(mnemonic: string) {
   checkMnem(mnemonic)
 
-  return publicKeyToAuthKey(
+  return publicKeyBytesToAuthKey(
     privateKeyToPublicKey(mnemonicToPrivateKey(mnemonic)),
   );
 }
@@ -96,6 +101,12 @@ export function mnemonicToAccountObj(mnemonic: string): Ed25519Account {
     privateKey,
     address
   })
+}
+
+// gets an AccountAddress type from a string.
+// Will pad the string with zeros up to 32 characters.
+export function addressFromString(literal: string ): AccountAddress {
+  return AccountAddress.fromString(literal, { maxMissingChars: 63 })
 }
 
 //////// CREATING ACCOUNTS ////////
