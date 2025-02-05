@@ -4,9 +4,9 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "lint": "eslint ./src && eslint ./tests && prettier --check ./**/*.ts",
-    "types-check": "bunx tsc --noEmit",
-    "format": "bunx eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
+    "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}'",
+    "types-check": "bunx tsc --noEmit --skipLibCheck",
+    "format": "eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
     "release-old": "bun build ./src/index.ts --target=node --outfile ./dist/index.mjs && bun build ./src/index.ts --target=node --outfile ./dist/index.js && bun build ./src/index.ts --target=node --outfile ./dist/index.mts && bun build ./src/index.ts --target=node --outfile ./dist/index.ts",
     "release": "bun build src/index.ts --outdir=dist --target=browser --format=esm --minify --sourcemap && bun build src/index.ts --outdir=dist --target=node --format=cjs --minify --sourcemap && bunx tsc --emitDeclarationOnly --declaration --outDir dist"
   },
