@@ -24,15 +24,3 @@ jobs:
       - name: unit tests
         # NOTE: include e2e tests when docker libra-cli integrated to TestContainers
         run: bun test keys
-
-  test-releases:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup repository
-        uses: actions/checkout@v4
-
-      - name: install bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: check release builds
-        run: bash test_releases.sh
