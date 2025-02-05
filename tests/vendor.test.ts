@@ -12,8 +12,8 @@ test("use vendor client", async () => {
 test("can get resource", async () => {
   interface Coin {
     coin: {
-      value: number
-    }
+      value: number;
+    };
   }
   const res = await get_resource<Coin>(
     "0x4c613c2f4b1e67ca8d98a542ee3f59f5",

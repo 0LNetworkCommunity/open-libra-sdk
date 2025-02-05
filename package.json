@@ -2,14 +2,17 @@
   "name": "libra-ts-sdk",
   "type": "module",
   "license": "UNLICENSED",
+  "main": "dist/index.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}'",
+    "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}' && bunx tsc --noEmit --skipLibCheck",
     "types-check": "bunx tsc --noEmit --skipLibCheck",
     "format": "eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
     "release:cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=browser --format=cjs --minify",
     "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify",
-    "release:ts-types": "bunx tsc --emitDeclarationOnly --declaration --outDir dist",
-    "release:ts": "bun build src/index.ts ---format=esm --outfile ./dist/index.ts --minify"
+    "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
+    "release:ts": "bun build src/index.ts ---format=esm --outfile ./dist/index.ts --minify",
+    "release": "bun release:ts-types"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

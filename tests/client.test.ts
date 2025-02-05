@@ -13,6 +13,10 @@ test("can get validators", async () => {
   expect(res.chain_id).toBe(1);
 
   const p = await client.postViewFunc(currentValidatorsPayload);
-  console.log(p[0].length);
-  expect(p[0].length).toBeGreaterThan(1);
+  if (Array.isArray(p[0])) {
+    console.log(p[0].length);
+    expect(p[0].length).toBeGreaterThan(1);
+  } else {
+    throw new Error("Expected p[0] to be an array");
+  }
 });

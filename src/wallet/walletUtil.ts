@@ -2,6 +2,7 @@ import {
   AccountAddress,
   AuthenticationKey,
   type InputViewFunctionJsonData,
+  type MoveValue,
 } from "@aptos-labs/ts-sdk";
 import { wrapLibra } from "../api/vendorClient";
 import { addressFromString } from "../crypto/keyFactory";
@@ -17,5 +18,13 @@ export async function getOriginatingAddress(
   };
   return aptos
     .viewJson({ payload })
-    .then((r) => addressFromString(r[0].toString()));
+    .then((r: MoveValue[]) => {
+      if (r[0] == null) {
+        throw new Error("Received null or undefined value");
+      }
+      return addressFromString(r[0].toString());
+    })
+    .catch((e) => {
+      throw e;
+    });
 }

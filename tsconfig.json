@@ -10,6 +10,8 @@
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
+    "outDir": "./dist", // Output to dist folder
+
     // Bundler mode
     // from: https://www.typescriptlang.org/docs/handbook/modules/guides/choosing-compiler-options.html
     "moduleResolution": "bundler", // allow run in node and bundlers
@@ -31,6 +33,7 @@
   "exclude": [
     "dist",
     "node_modules",
-    "examples"
+    "examples",
+    "eslint.config.js"
   ]
 }

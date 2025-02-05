@@ -9,6 +9,7 @@ import {
   type PendingTransactionResponse,
 } from "@aptos-labs/ts-sdk";
 import { wrapLibra } from "../api/vendorClient";
+import { MimeType } from "@aptos-labs/ts-sdk"; // Import MimeType from the vendor
 
 export async function submitTransactionDiem(
   args: {
@@ -17,6 +18,7 @@ export async function submitTransactionDiem(
 ): Promise<PendingTransactionResponse> {
   const { aptosConfig } = args;
   const signedTransaction = generateSignedTransaction({ ...args });
+
   const { data } = await postAptosFullNode<
     Uint8Array,
     PendingTransactionResponse
@@ -26,7 +28,7 @@ export async function submitTransactionDiem(
     path: "transactions",
     originMethod: "submitTransaction",
     // override the crazy x.aptos content-types
-    contentType: "application/x.diem.signed_transaction+bcs",
+    contentType: "application/x.diem.signed_transaction+bcs" as MimeType,
   });
   return data;
 }

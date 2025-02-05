@@ -78,7 +78,7 @@ export class LibraWallet {
   ): Promise<SimpleTransaction> {
     const libra = wrapLibra();
     return await libra.transaction.build.simple({
-      sender: this.onchainAddress,
+      sender: this.onchainAddress ?? this.account.accountAddress,
       data: {
         function: entry_function,
         functionArguments: args,

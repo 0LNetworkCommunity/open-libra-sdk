@@ -83,7 +83,7 @@ export class LibraClient {
       const response = await this.client.get("");
       return response.data;
     } catch (error) {
-      console.error(`Failed to get index: ${error.message}`);
+      console.error(`Failed to get index: ${error}`);
       // throw because if we can't get index, nothing else is possible
       throw error;
     }
@@ -95,42 +95,44 @@ export class LibraClient {
 
     return await this.client
       .get(`/accounts/${account}/resource/${struct_path}`)
-      .then((r: { data: { data } }) => r.data.data)
-      .catch((e: { message }) => {
+      .then((r: { data: { data: object[] } }) => r.data.data)
+      .catch((e) => {
         const errMsg = `Failed to get resource ${struct_path}, message: ${e.message}`;
         console.error(errMsg);
+        throw e;
       });
   }
 
   // Calls a "view" function on the chain via POST to API
-  async postViewFunc(payload: ViewObj): Promise<[] | undefined> {
+  async postViewFunc(payload: ViewObj): Promise<object[]> {
     this.assertReady();
 
     return await this.client
       .post("/view", payload)
-      .then((r: { data }) => {
+      .then((r: { data: object[] }) => {
         return r.data;
       })
-      .catch((e: { message }) => {
+      .catch((e: { message: object }) => {
         const errMsg = `Failed to get view fn: ${payload.function}, args: ${payload.arguments} message: ${e.message}`;
         console.error(errMsg);
-        return undefined;
+        return [];
       });
   }
   // Retrieves a list of events from an account via GET to API
-  async getEventList(payload: EventObj) {
+  async getEventList(payload: EventObj): Promise<object[]> {
     this.assertReady();
 
-    return await this.client
+    return this.client
       .get(
         `/accounts/${payload.address}/events/${payload.struct}/${payload.handler_field}`,
       )
-      .then((r: { data }) => {
+      .then((r: { data: object[] }) => {
         return r.data;
       })
-      .catch((e: { message }) => {
+      .catch((e: { message: object[] }) => {
         const errMsg = `Failed to get events ${payload}, message: ${e.message}`;
         console.error(errMsg);
+        throw e;
       });
   }
 }

@@ -9,7 +9,8 @@ export const currentValidators = async (
 
   const res = await client.postViewFunc(currentValidatorsPayload);
   if (res.length == 1) {
-    const list: string[] = res[0];
+    // yuck, response is a list of validator addresses
+    const list: string[] = res[0] as string[];
     return list;
   } else {
     throw "API error, no validator array found";
