@@ -5,7 +5,7 @@ on:
     branches: ['*']
 
 jobs:
-  test:
+  npm-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository
