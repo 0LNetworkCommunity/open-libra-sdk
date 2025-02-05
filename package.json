@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint ./src && eslint ./tests && prettier --check ./**/*.ts",
     "format": "eslint ./src --fix && eslint ./tests --fix && prettier --no-config --write ./**/*.ts",
-    "release": "bun build ./src/index.ts --minify --outfile ./dist/index.js"
+    "release": "bun build ./src/index.ts --target=node --outfile ./dist/index.mjs && bun build ./src/index.ts --target=node --outfile ./dist/index.js && bun build ./src/index.ts --target=node --outfile ./dist/index.mts && bun build ./src/index.ts --target=node --outfile ./dist/index.ts"
+
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

@@ -81,8 +81,8 @@ export class LibraWallet {
    * @param recipient address of recipient
    * @param amount non-decimal coin amount for transfer. Libra uses 6 decimal places. e.g. 1 coin = 1,000,000 amount
    */
-  transfer(recipient: AccountAddress, amount: number) {
-    this.buildTransaction(
+  async buildTransferTx(recipient: AccountAddress, amount: number): Promise<AnyRawTransaction> {
+    return this.buildTransaction(
       "0x1::ol_account::transfer",
       [recipient.toString(), amount],
     );
