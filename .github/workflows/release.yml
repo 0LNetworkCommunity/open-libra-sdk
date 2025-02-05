@@ -20,6 +20,9 @@ jobs:
       - name: release
         run: bun release
 
+      - name: check release builds
+        run: bash test_releases.sh
+
       - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
         with:
           # The arguments for the `git add` command (see the paragraph below for more info)
