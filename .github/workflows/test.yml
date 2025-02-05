@@ -22,7 +22,8 @@ jobs:
         run: bun install
 
       - name: unit tests
-        run: bun test
+        # NOTE: include e2e tests when docker libra-cli integrated to TestContainers
+        run: bun test keys
 
   test-releases:
     runs-on: ubuntu-latest
