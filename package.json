@@ -1,9 +1,24 @@
 {
   "name": "libra-ts-sdk",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "A minimalist Typescript library for interacting with the Open Libra blockchain.",
+  "homepage": "https://github.com/0LNetworkCommunity/libra-ts-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/0LNetworkCommunity/libra-ts-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0LNetworkCommunity/libra-ts-sdk.git"
+  },
   "license": "UNLICENSED",
+  "author": "",
+  "type": "module",
   "main": "dist/index.ts",
   "types": "dist/index.d.ts",
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
   "scripts": {
     "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}' && bunx tsc --noEmit --skipLibCheck",
     "types-check": "bunx tsc --noEmit --skipLibCheck",
@@ -13,6 +28,13 @@
     "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
     "release:ts": "bun build src/index.ts ---format=esm --outfile ./dist/index.ts --minify",
     "release": "bun release:ts-types && bun release:cjs && bun release:node &&bun release:ts && bun release:ts-types"
+  },
+  "dependencies": {
+    "@aptos-labs/ts-sdk": "^1.33.2",
+    "@noble/curves": "^1.8.1",
+    "@noble/hashes": "^1.7.1",
+    "@scure/bip39": "^1.5.4",
+    "axios": "^1.7.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
@@ -26,12 +48,5 @@
   },
   "peerDependencies": {
     "typescript": "^5.7.3"
-  },
-  "dependencies": {
-    "@aptos-labs/ts-sdk": "^1.33.2",
-    "@noble/curves": "^1.8.1",
-    "@noble/hashes": "^1.7.1",
-    "@scure/bip39": "^1.5.4",
-    "axios": "^1.7.9"
   }
 }
