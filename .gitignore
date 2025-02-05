@@ -130,3 +130,5 @@ out
 # don't include lockfiles
 bun.lockb
 bun.lock
+
+./dist
