@@ -1,4 +1,14 @@
-import type { AccountAddress, AccountAuthenticatorEd25519, AnyRawTransaction, CommittedTransactionResponse, Ed25519Account, InputGenerateTransactionOptions, MoveFunctionId, SimpleEntryFunctionArgumentTypes, SimpleTransaction } from "@aptos-labs/ts-sdk";
+import type {
+  AccountAddress,
+  AccountAuthenticatorEd25519,
+  AnyRawTransaction,
+  CommittedTransactionResponse,
+  Ed25519Account,
+  InputGenerateTransactionOptions,
+  MoveFunctionId,
+  SimpleEntryFunctionArgumentTypes,
+  SimpleTransaction,
+} from "@aptos-labs/ts-sdk";
 import { mnemonicToAccountObj } from "../crypto/keyFactory";
 import { signTransactionWithAuthenticatorDiem } from "../transaction/txSigning";
 import { submitAndWait } from "../transaction/submit";
@@ -35,17 +45,18 @@ export class LibraWallet {
   }
 
   /**
- * Requires connection to a fullnode, will check the actual address which this
- * authKey owns on chain.
- */
+   * Requires connection to a fullnode, will check the actual address which this
+   * authKey owns on chain.
+   */
   async sync_onchain() {
-    this.onchainAddress = await getOriginatingAddress(this.account.publicKey.authKey())
+    this.onchainAddress = await getOriginatingAddress(
+      this.account.publicKey.authKey(),
+    );
   }
 
   get_address(): AccountAddress {
-    return this.onchainAddress ?? this.account.accountAddress
+    return this.onchainAddress ?? this.account.accountAddress;
   }
-
 
   /**
    * Signs a raw transaction using the account's private key.
@@ -53,19 +64,18 @@ export class LibraWallet {
    * @returns A SignerAuthenticator object containing the signed transaction data.
    */
   signTransaction(transaction: AnyRawTransaction): AccountAuthenticatorEd25519 {
-    return signTransactionWithAuthenticatorDiem(
-      this.account,
-      transaction,
-    )
+    return signTransactionWithAuthenticatorDiem(this.account, transaction);
   }
-
 
   /**
    *
    * @param entry_function address of the function e.g. "0x1::ol_account::transfer"
    * @param args: list of simple serializable Move values e.g. [marlon_addr, 100]
    */
-  async buildTransaction(entry_function: MoveFunctionId, args: Array<SimpleEntryFunctionArgumentTypes>): Promise<SimpleTransaction> {
+  async buildTransaction(
+    entry_function: MoveFunctionId,
+    args: Array<SimpleEntryFunctionArgumentTypes>,
+  ): Promise<SimpleTransaction> {
     const libra = wrapLibra();
     return await libra.transaction.build.simple({
       sender: this.onchainAddress,
@@ -74,18 +84,21 @@ export class LibraWallet {
         functionArguments: args,
       },
       options: this.tx_options,
-    })
+    });
   }
   /**
    * Simple transfer function between ordinary accounts
    * @param recipient address of recipient
    * @param amount non-decimal coin amount for transfer. Libra uses 6 decimal places. e.g. 1 coin = 1,000,000 amount
    */
-  async buildTransferTx(recipient: AccountAddress, amount: number): Promise<AnyRawTransaction> {
-    return this.buildTransaction(
-      "0x1::ol_account::transfer",
-      [recipient.toString(), amount],
-    );
+  async buildTransferTx(
+    recipient: AccountAddress,
+    amount: number,
+  ): Promise<AnyRawTransaction> {
+    return this.buildTransaction("0x1::ol_account::transfer", [
+      recipient.toString(),
+      amount,
+    ]);
   }
   /**
    * Submits a signed transaction to the blockchain network.
@@ -96,8 +109,10 @@ export class LibraWallet {
   ): Promise<CommittedTransactionResponse> {
     const signerAuthenticator = this.signTransaction(transaction);
     return submitAndWait(transaction, signerAuthenticator).then((res) => {
-      console.log(`Transaction success: ${res.success}, vm_status: ${res.vm_status}`)
-      return res
-    })
+      console.log(
+        `Transaction success: ${res.success}, vm_status: ${res.vm_status}`,
+      );
+      return res;
+    });
   }
 }

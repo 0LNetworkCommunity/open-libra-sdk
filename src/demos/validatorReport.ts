@@ -7,7 +7,6 @@ const client = new LibraClient();
 await client.connect();
 client.assertReady();
 
-
 const res = await client.getIndex();
 console.log(res);
 

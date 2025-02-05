@@ -1,4 +1,13 @@
-import { AptosConfig, generateSignedTransaction, postAptosFullNode, type AccountAuthenticatorEd25519, type AnyRawTransaction, type CommittedTransactionResponse, type InputSubmitTransactionData, type PendingTransactionResponse } from "@aptos-labs/ts-sdk";
+import {
+  AptosConfig,
+  generateSignedTransaction,
+  postAptosFullNode,
+  type AccountAuthenticatorEd25519,
+  type AnyRawTransaction,
+  type CommittedTransactionResponse,
+  type InputSubmitTransactionData,
+  type PendingTransactionResponse,
+} from "@aptos-labs/ts-sdk";
 import { wrapLibra } from "../api/vendorClient";
 
 export async function submitTransactionDiem(
@@ -8,7 +17,10 @@ export async function submitTransactionDiem(
 ): Promise<PendingTransactionResponse> {
   const { aptosConfig } = args;
   const signedTransaction = generateSignedTransaction({ ...args });
-  const { data } = await postAptosFullNode<Uint8Array, PendingTransactionResponse>({
+  const { data } = await postAptosFullNode<
+    Uint8Array,
+    PendingTransactionResponse
+  >({
     aptosConfig,
     body: signedTransaction,
     path: "transactions",
@@ -19,7 +31,10 @@ export async function submitTransactionDiem(
   return data;
 }
 
-export async function submitAndWait(transaction: AnyRawTransaction, authenticator: AccountAuthenticatorEd25519): Promise<CommittedTransactionResponse> {
+export async function submitAndWait(
+  transaction: AnyRawTransaction,
+  authenticator: AccountAuthenticatorEd25519,
+): Promise<CommittedTransactionResponse> {
   const libra = wrapLibra();
   const args = {
     transaction: transaction,
@@ -35,5 +50,5 @@ export async function submitAndWait(transaction: AnyRawTransaction, authenticato
   // 5. Wait for results
   return libra.waitForTransaction({
     transactionHash: submittedTransaction.hash,
-  })
+  });
 }
