@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "30 01 * * *"
   push:
-    branches: ['*']
+    branches: ['ci']
   pull_request:
     types: [opened, synchronize]
 
