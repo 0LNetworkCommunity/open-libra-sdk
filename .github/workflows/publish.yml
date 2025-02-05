@@ -1,8 +1,8 @@
-name: check-release
+name: release
 
 on:
   push:
-    branches: ['*']
+    branches: ['main', 'npm-*']
 
 jobs:
   npm-publish:
@@ -22,3 +22,8 @@ jobs:
 
       - name: check release builds
         run: bash test_releases.sh
+
+      - name: publish to npm
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_PUBLISH }}
