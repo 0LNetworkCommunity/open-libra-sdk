@@ -10,7 +10,12 @@ test("use vendor client", async () => {
 });
 
 test("can get resource", async () => {
-  const res = await get_resource(
+  interface Coin {
+    coin: {
+      value: number
+    }
+  }
+  const res = await get_resource<Coin>(
     "0x4c613c2f4b1e67ca8d98a542ee3f59f5",
     "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
   );

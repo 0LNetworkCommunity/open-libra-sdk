@@ -1,14 +1,16 @@
 {
   "name": "libra-ts-sdk",
-  "license": "UNLICENSED",
-  "module": "src/index.ts",
   "type": "module",
+  "license": "UNLICENSED",
   "scripts": {
     "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}'",
     "types-check": "bunx tsc --noEmit --skipLibCheck",
     "format": "eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
     "release-old": "bun build ./src/index.ts --target=node --outfile ./dist/index.mjs && bun build ./src/index.ts --target=node --outfile ./dist/index.js && bun build ./src/index.ts --target=node --outfile ./dist/index.mts && bun build ./src/index.ts --target=node --outfile ./dist/index.ts",
-    "release": "bun build src/index.ts --outdir=dist --target=browser --format=esm --minify --sourcemap && bun build src/index.ts --outdir=dist --target=node --format=cjs --minify --sourcemap && bunx tsc --emitDeclarationOnly --declaration --outDir dist"
+    "release": "bun build src/index.ts --outdir=dist --target=browser --format=esm --minify --sourcemap && bun build src/index.ts --outfile=dist/index.cjs --target=node --format=cjs --minify --sourcemap && bunx tsc --emitDeclarationOnly --declaration --outDir dist",
+    "release-cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=browser --format=cjs --minify",
+    "release-node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify",
+    "release-ts-types": "bunx tsc --emitDeclarationOnly --declaration --outDir dist"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

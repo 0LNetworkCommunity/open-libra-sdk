@@ -19,13 +19,13 @@ export function wrapLibra(): Aptos {
 
 // @params account can be string
 // @params struct_id can be a string in format x::y::z
-export async function get_resource(
+export async function get_resource<T extends {} = any>(
   account: string,
   struct_id: MoveStructId,
-): Promise<object> {
+): Promise<T> {
   const aptos = wrapLibra();
   const account_parse = addressFromString(account);
-  return await aptos.getAccountResource({
+  return await aptos.getAccountResource<T>({
     accountAddress: account_parse,
     resourceType: struct_id,
   });
