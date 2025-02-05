@@ -1,0 +1,27 @@
+name: release
+
+on:
+  push:
+    branches: ['*']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v4
+
+      - name: install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: install deps
+        run: bun install
+
+      - name: release
+        run: bun release
+
+      - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
+        with:
+          # The arguments for the `git add` command (see the paragraph below for more info)
+          # Default: '.'
+          add: 'dist'
