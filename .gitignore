@@ -131,4 +131,4 @@ out
 bun.lockb
 bun.lock
 
-./dist
+dist/
