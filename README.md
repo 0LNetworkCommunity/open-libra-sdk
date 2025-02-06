@@ -2,13 +2,17 @@
 
 A minimalist Typescript library for interacting with the Open Libra blockchain.
 
+```
+npm install open-libra-sdk
+```
+
 ## Common Transactions
 
 #### Check your connection
 Check you can connect to a fullnode, and get the API index with latest block info
 
 ```
-  import {wrapLibra} from 'libraSdk'
+  import {wrapLibra} from 'open-libra-sdk'
   const libra = wrapLibra();
   const ledgerInfo = await libra.getLedgerInfo();
 ```
@@ -19,7 +23,7 @@ Check you can connect to a fullnode, and get the API index with latest block inf
 You can define a Type, and the get_resource will coerce the type in typescript
 
 ```
-  import {get_resource} from 'libraSdk'
+  import {get_resource} from 'open-libra-sdk'
 
   interface Coin {
     coin: {
@@ -46,7 +50,7 @@ You can define a Type, and the get_resource will coerce the type in typescript
 Build transactions for Entry Functions
 ```
   const addr_formatted = addressFromString(
-    "0xCAFEBABE",
+    "0xDECAFC0FFEE",
   ).toString();
 
   const tx = await wallet.buildTransaction("0x1::ol_account::transfer", [
@@ -63,7 +67,7 @@ Or use the `transfer` helper
   await wallet.sync_onchain();
 
   const address_obj = addressFromString(
-    "0xCAFEBABE",
+    "0xDECAFC0FFEE",
   );
 
   const tx = await wallet.transfer(address_obj, 100);
@@ -80,14 +84,13 @@ Look in the `./examples` folder for commonjs, Node, and typescript imports of th
 In a common JS file you can import the sdk to manage wallets
 and query the chain. See the minimal example:
 ```
-const libraSDK = require('../libra-ts-sdk/dist/');
+const libraSDK = require('open-libra-sdk');
 
 const main = async () => {
   const mnem = libraSDK.generateMnemonic();
   console.log("Generate a mnemonic:\n");
 
   console.log(mnem, "\n");
-
 
   console.log("Calling Libra Explorer API");
   const client = new libraSDK.LibraClient();
@@ -102,7 +105,7 @@ main()
 
 ```
 
-# Core Devs
+# Maintainers
 
 ### Bun
 `bun` is the default Node/JS/TS runtime for OL development.
