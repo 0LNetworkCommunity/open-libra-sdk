@@ -7,6 +7,9 @@ on:
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # allow GITHUB_TOKEN to publish packages
     steps:
       - name: Setup repository
         uses: actions/checkout@v4
@@ -26,4 +29,5 @@ jobs:
       - name: publish to npm
         uses: JS-DevTools/npm-publish@v3
         with:
-          token: ${{ secrets.NPM_PUBLISH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: "https://npm.pkg.github.com"
