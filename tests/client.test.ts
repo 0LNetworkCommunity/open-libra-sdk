@@ -1,17 +1,22 @@
-import { test } from "bun:test"
+import { expect, test } from "bun:test";
 import { LibraClient } from "../src/api/api";
 import { currentValidatorsPayload } from "../src/payloads/validators";
 
 test("can get validators", async () => {
-    console.log("Calling Libra Explorer API");
-    let client = new LibraClient();
-    await client.connect();
-    client.assertReady();
+  console.log("Calling Libra Explorer API");
+  const client = new LibraClient();
+  await client.connect();
+  client.assertReady();
 
+  const res = await client.getIndex();
 
-    let res = await client.getIndex();
-    console.log(res);
+  expect(res.chain_id).toBe(1);
 
-    let p = await client.postViewFunc(currentValidatorsPayload);
-    console.log(p);
-  })
+  const p = await client.postViewFunc(currentValidatorsPayload);
+  if (Array.isArray(p[0])) {
+    console.log(p[0].length);
+    expect(p[0].length).toBeGreaterThan(1);
+  } else {
+    throw new Error("Expected p[0] to be an array");
+  }
+});

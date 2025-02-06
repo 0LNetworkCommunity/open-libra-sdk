@@ -1,0 +1,32 @@
+name: publish
+
+on:
+  push:
+    branches: ['main', 'npm-*']
+
+jobs:
+  npm-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # allow GITHUB_TOKEN to publish packages
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v4
+
+      - name: install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: install deps
+        run: bun install
+
+      - name: release
+        run: bun release
+
+      - name: check release builds
+        run: bash test_releases.sh
+
+      - name: publish to npm
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_PUBLISH }}

@@ -1,0 +1,26 @@
+name: test
+
+on:
+  schedule:
+    - cron: "30 01 * * *"
+  push:
+    branches: ['*']
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v4
+
+      - name: install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: install deps
+        run: bun install
+
+      - name: unit tests
+        # NOTE: include e2e tests when docker libra-cli integrated to TestContainers
+        run: bun test keys

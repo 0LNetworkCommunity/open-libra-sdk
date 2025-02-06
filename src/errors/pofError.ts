@@ -17,6 +17,6 @@ export enum PoFError {
 
 export const mapPoFErrors = (list: string[]): string[] => {
   return list.map((e) => {
-    return PoFError[parseInt(e)]
-  })
-}
+    return PoFError[parseInt(e)];
+  });
+};

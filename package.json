@@ -1,18 +1,52 @@
 {
-  "name": "libra-ts-sdk",
-  "module": "index.ts",
+  "name": "open-libra-sdk",
+  "version": "1.0.1",
+  "description": "A minimalist Typescript library for interacting with the Open Libra blockchain.",
+  "homepage": "https://github.com/0LNetworkCommunity/libra-ts-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/0LNetworkCommunity/libra-ts-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0LNetworkCommunity/libra-ts-sdk.git"
+  },
+  "license": "UNLICENSED",
+  "author": "",
   "type": "module",
+  "main": "dist/index.ts",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
   "scripts": {
-    "lint": "eslint *.ts --no-eslintrc && prettier --check *.ts",
-    "format": "eslint *.ts --no-eslintrc --fix && prettier --no-config --write *.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}' && bunx tsc --noEmit --skipLibCheck",
+    "types-check": "bunx tsc --noEmit --skipLibCheck",
+    "format": "eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
+    "release:cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=browser --format=cjs --minify",
+    "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify",
+    "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
+    "release:ts": "bun build src/index.ts ---format=esm --outfile ./dist/index.ts --minify",
+    "release": "bun release:ts-types && bun release:cjs && bun release:node &&bun release:ts && bun release:ts-types"
   },
   "dependencies": {
-    "axios": "^1.7.7"
+    "@aptos-labs/ts-sdk": "^1.33.2",
+    "@noble/curves": "^1.8.1",
+    "@noble/hashes": "^1.7.1",
+    "@scure/bip39": "^1.5.4",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/bun": "latest",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
+    "@typescript-eslint/parser": "^8.23.0",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "typescript-eslint": "^8.22.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.3"
   }
 }

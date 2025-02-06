@@ -1,0 +1,24 @@
+name: check-release
+
+on:
+  push:
+    branches: ['*']
+
+jobs:
+  npm-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v4
+
+      - name: install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: install deps
+        run: bun install
+
+      - name: release
+        run: bun release
+
+      - name: check release builds
+        run: bash test_releases.sh
