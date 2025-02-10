@@ -20,7 +20,12 @@ jobs:
 
       - name: install deps
         run: bun install
+      - name: start docker
+        run: bun run testnet
 
-      - name: unit tests
+      - name: sleep
+        run: sleep 60s
+
+      - name: e2e tests
         # NOTE: include e2e tests when docker libra-cli integrated to TestContainers
-        run: bun test keys
+        run: bun test
