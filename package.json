@@ -36,7 +36,8 @@
     "@noble/curves": "^1.8.1",
     "@noble/hashes": "^1.7.1",
     "@scure/bip39": "^1.5.4",
-    "axios": "^1.7.9"
+    "axios": "^1.7.9",
+    "testcontainers": "^10.18.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
