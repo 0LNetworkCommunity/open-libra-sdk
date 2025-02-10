@@ -6,6 +6,7 @@ import type {
   Ed25519Account,
   InputGenerateTransactionOptions,
   MoveFunctionId,
+  Network,
   SimpleEntryFunctionArgumentTypes,
   SimpleTransaction,
 } from "@aptos-labs/ts-sdk";
