@@ -6,7 +6,7 @@ import {
   publicKeyToAuthKey,
 } from "../src/crypto/keyFactory";
 import { wrapLibra } from "../src/api/vendorClient";
-import { ALICE_MNEM } from "./fixture_mnemonics";
+import { ALICE_MNEM } from "./support/fixture_mnemonics";
 import { getOriginatingAddress } from "../src/wallet/walletUtil";
 import {
   generateSigningMessageForTransactionDiem,

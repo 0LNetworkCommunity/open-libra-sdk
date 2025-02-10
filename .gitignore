@@ -132,3 +132,5 @@ bun.lockb
 bun.lock
 
 dist/
+
+.DS_Store

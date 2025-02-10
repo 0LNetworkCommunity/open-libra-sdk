@@ -5,7 +5,7 @@ import {
   mnemonicToAccountObj,
   publicKeyToAuthKey,
 } from "../src/crypto/keyFactory";
-import { ALICE_MNEM } from "./fixture_mnemonics";
+import { ALICE_MNEM } from "./support/fixture_mnemonics";
 import { LibraWallet } from "../src/wallet/libraWallet";
 
 test("can get originating address", async () => {
