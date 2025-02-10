@@ -27,7 +27,8 @@
     "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify",
     "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
     "release:ts": "bun build src/index.ts ---format=esm --outfile ./dist/index.ts --minify",
-    "release": "bun release:ts-types && bun release:cjs && bun release:node &&bun release:ts && bun release:ts-types"
+    "release": "bun release:ts-types && bun release:cjs && bun release:node &&bun release:ts && bun release:ts-types",
+    "testnet": "cd tests/support/container && docker compose up"
   },
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.33.2",

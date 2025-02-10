@@ -5,23 +5,26 @@ import {
   mnemonicToAccountObj,
   publicKeyToAuthKey,
 } from "../src/crypto/keyFactory";
-import { wrapLibra } from "../src/api/vendorClient";
+import { Libra } from "../src/api/vendorClient";
 import { ALICE_MNEM } from "./support/fixture_mnemonics";
-import { getOriginatingAddress } from "../src/wallet/walletUtil";
 import {
   generateSigningMessageForTransactionDiem,
   signTransactionDiem,
   signTransactionWithAuthenticatorDiem,
 } from "../src/transaction/txSigning";
-import type { InputGenerateTransactionOptions } from "@aptos-labs/ts-sdk";
+import {
+  Network,
+  type InputGenerateTransactionOptions,
+} from "@aptos-labs/ts-sdk";
 import { submitTransactionDiem } from "../src/transaction/submit";
+import { DEBUG_URL, LibraWallet } from "../src";
 
 test("can sign noop tx", async () => {
-  const libra = wrapLibra();
+  const libra = new Libra(Network.TESTNET, DEBUG_URL);
 
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);
-  const onchainAddr = await getOriginatingAddress(authKey);
+  const onchainAddr = await libra.getOriginatingAddress(authKey);
 
   const marlon_addr = addressFromString("0x1234");
 
@@ -38,29 +41,26 @@ test("can sign noop tx", async () => {
   const message = generateSigningMessageForTransactionDiem(transaction);
 
   const signature = signTransactionDiem(alice_obj, transaction);
-  console.log(signature.toString());
 
   const authenticator = signTransactionWithAuthenticatorDiem(
     alice_obj,
     transaction,
   );
 
-  console.log(authenticator.signature.toString());
   expect(authenticator.signature.toString()).toBe(signature.toString());
 
   const ver = alice_obj.publicKey.verifySignature({ signature, message });
-  console.log(ver);
   expect(ver).toBeTruthy();
 });
 
 test(
   "can submit noop tx",
   async () => {
-    const libra = wrapLibra();
+    const libra = new Libra(Network.TESTNET, DEBUG_URL);
 
     const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
     const authKey = publicKeyToAuthKey(alice_obj.publicKey);
-    const onchainAddr = await getOriginatingAddress(authKey);
+    const onchainAddr = await libra.getOriginatingAddress(authKey);
 
     const marlon_addr = addressFromString("0x37799DA327DB4C58D5E28E7DD6338F6B");
 
@@ -95,8 +95,6 @@ test(
       ...args,
     });
 
-    console.log(`Submitted transaction hash: ${submittedTransaction.hash}`);
-
     // 5. Wait for results
     const executedTransaction = await libra.waitForTransaction({
       transactionHash: submittedTransaction.hash,
@@ -105,3 +103,19 @@ test(
   },
   { timeout: 10_000 },
 );
+
+test("can transfer", async () => {
+  const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+  await wallet.sync_onchain();
+
+  const addr_formatted = addressFromString(
+    "0x37799DA327DB4C58D5E28E7DD6338F6B",
+  ).toString();
+
+  const tx = await wallet.buildTransaction("0x1::ol_account::transfer", [
+    addr_formatted,
+    100,
+  ]);
+  const t = await wallet.signSubmitWait(tx);
+  expect(t.success).toBeTrue();
+});

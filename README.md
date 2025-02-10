@@ -12,8 +12,13 @@ npm install open-libra-sdk
 Check you can connect to a fullnode, and get the API index with latest block info
 
 ```
-  import {wrapLibra} from 'open-libra-sdk'
-  const libra = wrapLibra();
+  import { Libra } from 'open-libra-sdk'
+  // get the mainnet fullnode
+  const libra = new Libra();
+
+  // optionally or for a dockerize local testnet
+  const libra = new Libra(Network.test, 'localhost:8480/v1');
+
   const ledgerInfo = await libra.getLedgerInfo();
 ```
 
@@ -23,7 +28,8 @@ Check you can connect to a fullnode, and get the API index with latest block inf
 You can define a Type, and the get_resource will coerce the type in typescript
 
 ```
-  import {get_resource} from 'open-libra-sdk'
+  import {get_resource, Libra} from 'open-libra-sdk'
+  const libra = new Libra();
 
   interface Coin {
     coin: {
@@ -31,7 +37,7 @@ You can define a Type, and the get_resource will coerce the type in typescript
     };
   }
 
-  const res = await get_resource<Coin>(
+  const res = await libra.get_resource<Coin>(
     "0x4c613c2f4b1e67ca8d98a542ee3f59f5",
     "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
   );

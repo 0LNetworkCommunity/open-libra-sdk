@@ -10,7 +10,8 @@ test("can get validators", async () => {
 
   const res = await client.getIndex();
 
-  expect(res.chain_id).toBe(1);
+  // testnet is 2
+  expect(res.chain_id).toBe(2);
 
   const p = await client.postViewFunc(currentValidatorsPayload);
   if (Array.isArray(p[0])) {
