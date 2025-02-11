@@ -13,6 +13,7 @@ import {
   signTransactionWithAuthenticatorDiem,
 } from "../../src/transaction/txSigning";
 import {
+  Aptos,
   Deserializer,
   Network,
   SimpleTransaction,
@@ -124,7 +125,7 @@ test(
   "can transfer",
   async () => {
     const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
-    await wallet.sync_onchain();
+    await wallet.syncOnchain();
 
     const addr_formatted = addressFromString(
       "0x37799DA327DB4C58D5E28E7DD6338F6B",
@@ -136,6 +137,38 @@ test(
     ]);
     const t = await wallet.signSubmitWait(tx);
     expect(t.success).toBeTrue();
+  },
+  { timeout: 30_000 },
+);
+
+test(
+  "can transfer multiple sequence numbers",
+  async () => {
+    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+    await wallet.syncOnchain();
+
+    const addr_formatted = addressFromString(
+      "0x37799DA327DB4C58D5E28E7DD6338F6B",
+    ).toString();
+
+    const tx = await wallet.buildTransaction("0x1::ol_account::transfer", [
+      addr_formatted,
+      100,
+    ]);
+    const t = await wallet.signSubmitWait(tx);
+    expect(t.success).toBeTrue();
+
+    // // get latest sequence number
+    await wallet.syncOnchain();
+    wallet.txOptions.accountSequenceNumber = 1;
+    const tx2 = await wallet.buildTransaction("0x1::ol_account::transfer", [
+      addr_formatted,
+      200,
+    ]);
+    console.log(tx2.rawTransaction.sequence_number);
+    const t2 = await wallet.signSubmitWait(tx);
+    expect(t2.success).toBeTrue();
+
   },
   { timeout: 30_000 },
 );
