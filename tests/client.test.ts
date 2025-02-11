@@ -33,7 +33,9 @@ test("can get balance", async () => {
 
   // testnet is 2
   expect(res.chain_id).toBe(2);
-  let b = accountBalancePayload("0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5");
+  const b = accountBalancePayload(
+    "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
+  );
   const p = await client.postViewFunc(b);
-  console.log(p)
+  console.log(p);
 });
