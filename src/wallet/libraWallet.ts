@@ -31,7 +31,7 @@ export class LibraWallet {
   /**
    * Transaction options that can be modified based on user preferences.
    */
-  tx_options: InputGenerateTransactionOptions;
+  txOptions: InputGenerateTransactionOptions;
 
   /**
    * Constructs a CryptoWallet instance by generating an account from a mnemonic phrase.
@@ -39,7 +39,7 @@ export class LibraWallet {
    */
   constructor(mnemonic: string, network?: Network, fullnode?: string) {
     this.account = mnemonicToAccountObj(mnemonic);
-    this.tx_options = {
+    this.txOptions = {
       maxGasAmount: 40000,
       gasUnitPrice: 100,
     }; // Default options
@@ -50,10 +50,19 @@ export class LibraWallet {
    * Requires connection to a fullnode, will check the actual address which this
    * authKey owns on chain.
    */
-  async sync_onchain() {
+  async syncOnchain() {
+    const derived_authkey = this.account.publicKey.authKey()
     this.onchainAddress = await this.libra.getOriginatingAddress(
-      this.account.publicKey.authKey(),
+      derived_authkey,
     );
+    if (this.onchainAddress) {
+      const account_data = await this.libra.account.getAccountInfo({accountAddress: this.onchainAddress});
+      console.log(account_data);
+      this.txOptions.accountSequenceNumber = Number(account_data.sequence_number);
+      if (derived_authkey.toString() != account_data.authentication_key) {
+        throw "Derived authentication key does not match the one on-chain, cannot submit transactions"
+      }
+    }
   }
 
   get_address(): AccountAddress {
@@ -84,7 +93,7 @@ export class LibraWallet {
         function: entry_function,
         functionArguments: args,
       },
-      options: this.tx_options,
+      options: this.txOptions,
     });
   }
   /**
