@@ -1,4 +1,4 @@
-name: test
+name: e2e
 
 on:
   schedule:
@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  unit-tests:
+  e2e-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository
