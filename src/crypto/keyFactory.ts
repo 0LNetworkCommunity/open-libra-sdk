@@ -103,6 +103,13 @@ export function mnemonicToAccountObj(mnemonic: string): Ed25519Account {
 
   const address = AccountAddress.from(authkey);
 
+  return newAccount(privateKey, address);
+}
+
+export function newAccount(
+  privateKey: Ed25519PrivateKey,
+  address: AccountAddress,
+): Ed25519Account {
   return new Ed25519Account({
     privateKey,
     address,

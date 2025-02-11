@@ -13,7 +13,9 @@ import {
   signTransactionWithAuthenticatorDiem,
 } from "../../src/transaction/txSigning";
 import {
+  Deserializer,
   Network,
+  SimpleTransaction,
   type InputGenerateTransactionOptions,
 } from "@aptos-labs/ts-sdk";
 import { submitTransactionDiem } from "../../src/transaction/submit";
@@ -137,3 +139,59 @@ test(
   },
   { timeout: 30_000 },
 );
+
+test("can sign noop tx", async () => {
+  const libra = new Libra(Network.TESTNET, DEBUG_URL);
+
+  const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
+  const authKey = publicKeyToAuthKey(alice_obj.publicKey);
+  const onchainAddr = await libra.getOriginatingAddress(authKey);
+
+  const marlon_addr = addressFromString("0x1234");
+
+  const transaction = await libra.transaction.build.simple({
+    sender: onchainAddr,
+    data: {
+      // All transactions on Aptos are implemented via smart contracts.
+      function: "0x1::ol_account::transfer",
+      functionArguments: [marlon_addr, 100],
+    },
+  });
+
+  // 3. Sign
+  const message = generateSigningMessageForTransactionDiem(transaction);
+
+  const signature = signTransactionDiem(alice_obj, transaction);
+
+  const authenticator = signTransactionWithAuthenticatorDiem(
+    alice_obj,
+    transaction,
+  );
+
+  expect(authenticator.signature.toString()).toBe(signature.toString());
+
+  const ver = alice_obj.publicKey.verifySignature({ signature, message });
+  expect(ver).toBeTruthy();
+});
+
+test("cold wallet workflow", async () => {
+  // Prepare transaction in online environment
+  const libra = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+
+  const marlon_addr = addressFromString("0x37799DA327DB4C58D5E28E7DD6338F6B");
+
+  const transaction = await libra.buildTransaction(
+    "0x1::ol_account::transfer",
+    [marlon_addr.toString(), 100],
+  );
+
+  const bytes = transaction.bcsToBytes();
+  // Save the bytes to file, etc.
+
+  // This part can happen in a cold wallet environment
+  const de = new Deserializer(bytes);
+  const simple = SimpleTransaction.deserialize(de);
+  expect(simple.rawTransaction.sender.toStringLong()).toBe(
+    libra.account.accountAddress.toStringLong(),
+  );
+});
