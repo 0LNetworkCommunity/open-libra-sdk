@@ -1,7 +1,7 @@
 services:
   alice:
     #image: ubuntu:22.04
-    image: ghcr.io/0lnetworkcommunity/libra-framework/libra-node:ff6a7c255f9a4220a3a577c2e2eb5345261ed511
+    image: ghcr.io/0lnetworkcommunity/libra-framework/libra-node:1f2560c3ab604d62b72aeb1aaeeae9781d2528dc
     container_name: libra_alice
     hostname: alice
     environment:
@@ -21,7 +21,7 @@ services:
 
   bob:
     #image: ubuntu:22.04
-    image: ghcr.io/0lnetworkcommunity/libra-framework/libra-node:ff6a7c255f9a4220a3a577c2e2eb5345261ed511
+    image: ghcr.io/0lnetworkcommunity/libra-framework/libra-node:1f2560c3ab604d62b72aeb1aaeeae9781d2528dc
     container_name: libra_bob
     hostname: bob
     depends_on:
@@ -43,7 +43,7 @@ services:
 
   carol:
     #image: ubuntu:22.04
-    image: ghcr.io/0lnetworkcommunity/libra-framework/libra-node:ff6a7c255f9a4220a3a577c2e2eb5345261ed511
+    image: ghcr.io/0lnetworkcommunity/libra-framework/libra-node:1f2560c3ab604d62b72aeb1aaeeae9781d2528dc
     container_name: libra_carol
     hostname: carol
     depends_on:
