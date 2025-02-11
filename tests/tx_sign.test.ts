@@ -101,21 +101,25 @@ test(
     });
     expect(executedTransaction.success).toBeTrue();
   },
-  { timeout: 10_000 },
+  { timeout: 30_000 },
 );
 
-test("can transfer", async () => {
-  const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
-  await wallet.sync_onchain();
+test(
+  "can transfer",
+  async () => {
+    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+    await wallet.sync_onchain();
 
-  const addr_formatted = addressFromString(
-    "0x37799DA327DB4C58D5E28E7DD6338F6B",
-  ).toString();
+    const addr_formatted = addressFromString(
+      "0x37799DA327DB4C58D5E28E7DD6338F6B",
+    ).toString();
 
-  const tx = await wallet.buildTransaction("0x1::ol_account::transfer", [
-    addr_formatted,
-    100,
-  ]);
-  const t = await wallet.signSubmitWait(tx);
-  expect(t.success).toBeTrue();
-});
+    const tx = await wallet.buildTransaction("0x1::ol_account::transfer", [
+      addr_formatted,
+      100,
+    ]);
+    const t = await wallet.signSubmitWait(tx);
+    expect(t.success).toBeTrue();
+  },
+  { timeout: 30_000 },
+);

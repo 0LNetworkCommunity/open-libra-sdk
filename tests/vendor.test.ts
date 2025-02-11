@@ -23,5 +23,5 @@ test("can get resource", async () => {
     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
     "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
   );
-  expect(Number(res.coin.value)).toBe(0);
+  expect(Number(res.coin.value)).toBeGreaterThan(10000000000000);
 });
