@@ -10,7 +10,8 @@ const composeFilePath = path.resolve(__dirname, "container");
 
 const options: IDockerComposeOptions = {
   cwd: composeFilePath,
-  log: true,
+  // NOTE: enable to debug all docker compose output and container logs
+  // log: true,
 };
 
 export async function testnetUp(): Promise<void> {
@@ -23,7 +24,7 @@ export async function testnetUp(): Promise<void> {
     //       const targetString = `"event":"NewRound","reason":"QCReady"`; // Replace with the actual string you expect
 
     if (logOutput.out.includes(targetString)) {
-      console.log("Testnet started. Proceeding...");
+      console.log("testnet started, proceeding...");
       break; // Exit the loop when the message is found
     }
 
