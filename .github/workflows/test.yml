@@ -21,15 +21,6 @@ jobs:
       - name: install deps
         run: bun install
 
-      - name: start docker
-        run: bun run testnet
-
-      - name: sleep
-        run: sleep 60s
-
       - name: e2e tests
-        # NOTE: include e2e tests when docker libra-cli integrated to TestContainers
+        # Note: will drive docker from within the bun test suite
         run: bun test
-
-      - name: start docker
-        run: bun run testnet-stop

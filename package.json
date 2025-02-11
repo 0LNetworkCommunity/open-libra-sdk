@@ -36,8 +36,7 @@
     "@noble/curves": "^1.8.1",
     "@noble/hashes": "^1.7.1",
     "@scure/bip39": "^1.5.4",
-    "axios": "^1.7.9",
-    "testcontainers": "^10.18.0"
+    "axios": "^1.7.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
@@ -47,7 +46,8 @@
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
     "prettier": "^3.4.2",
-    "typescript-eslint": "^8.22.0"
+    "typescript-eslint": "^8.22.0",
+    "docker-compose": "^1.1.1"
   },
   "peerDependencies": {
     "typescript": "^5.7.3"
