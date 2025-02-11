@@ -1,13 +1,27 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, test } from "bun:test";
 import {
   mnemonicToAccountObj,
   publicKeyToAuthKey,
-} from "../src/crypto/keyFactory";
-import { ALICE_MNEM } from "./support/fixture_mnemonics";
-import { LibraWallet } from "../src/wallet/libraWallet";
-import { Libra } from "../src/api/vendorClient";
+} from "../../src/crypto/keyFactory";
+import { ALICE_MNEM } from "../support/fixture_mnemonics";
+import { LibraWallet } from "../../src/wallet/libraWallet";
+import { Libra } from "../../src/api/vendorClient";
 import { Network } from "@aptos-labs/ts-sdk";
-import { DEBUG_URL } from "../src";
+import { DEBUG_URL } from "../../src";
+import { testnetDown, testnetUp } from "../support/compose";
+
+beforeEach(async () => {
+  console.log("testnet setup");
+  // make sure we teardown any zombies first
+  await testnetDown();
+  await testnetUp();
+});
+
+afterEach(async () => {
+  await testnetDown().then(() => {
+    console.log("testnet down");
+  });
+});
 
 test("can get originating address", async () => {
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);

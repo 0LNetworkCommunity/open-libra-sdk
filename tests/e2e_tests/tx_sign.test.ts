@@ -1,23 +1,37 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, test } from "bun:test";
 
 import {
   addressFromString,
   mnemonicToAccountObj,
   publicKeyToAuthKey,
-} from "../src/crypto/keyFactory";
-import { Libra } from "../src/api/vendorClient";
-import { ALICE_MNEM } from "./support/fixture_mnemonics";
+} from "../../src/crypto/keyFactory";
+import { Libra } from "../../src/api/vendorClient";
+import { ALICE_MNEM } from "../support/fixture_mnemonics";
 import {
   generateSigningMessageForTransactionDiem,
   signTransactionDiem,
   signTransactionWithAuthenticatorDiem,
-} from "../src/transaction/txSigning";
+} from "../../src/transaction/txSigning";
 import {
   Network,
   type InputGenerateTransactionOptions,
 } from "@aptos-labs/ts-sdk";
-import { submitTransactionDiem } from "../src/transaction/submit";
-import { DEBUG_URL, LibraWallet } from "../src";
+import { submitTransactionDiem } from "../../src/transaction/submit";
+import { DEBUG_URL, LibraWallet } from "../../src";
+import { testnetDown, testnetUp } from "../support/compose";
+
+beforeEach(async () => {
+  console.log("testnet setup");
+  // make sure we teardown any zombies first
+  await testnetDown();
+  await testnetUp();
+});
+
+afterEach(async () => {
+  await testnetDown().then(() => {
+    console.log("testnet down");
+  });
+});
 
 test("can sign noop tx", async () => {
   const libra = new Libra(Network.TESTNET, DEBUG_URL);

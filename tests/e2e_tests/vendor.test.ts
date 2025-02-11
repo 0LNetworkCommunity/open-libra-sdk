@@ -1,9 +1,21 @@
-import { expect, test } from "bun:test";
-import { Libra } from "../src/api/vendorClient";
+import { afterEach, beforeEach, expect, test } from "bun:test";
+import { Libra } from "../../src/api/vendorClient";
 import { Network } from "@aptos-labs/ts-sdk";
-import { DEBUG_URL } from "../src";
+import { DEBUG_URL } from "../../src";
+import { testnetDown, testnetUp } from "../support/compose";
 
-// NOTE: must be running a local testnet, or fullnode on localhost:8080
+beforeEach(async () => {
+  console.log("testnet setup");
+  // make sure we teardown any zombies first
+  await testnetDown();
+  await testnetUp();
+});
+
+afterEach(async () => {
+  await testnetDown().then(() => {
+    console.log("testnet down");
+  });
+});
 
 test("use vendor client", async () => {
   const libra = new Libra(Network.TESTNET, DEBUG_URL);

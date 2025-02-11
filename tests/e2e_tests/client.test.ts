@@ -1,7 +1,21 @@
-import { expect, test } from "bun:test";
-import { LibraClient } from "../src/api/api";
-import { currentValidatorsPayload } from "../src/payloads/validators";
-import { accountBalancePayload } from "../src/payloads/common";
+import { afterEach, beforeEach, expect, test } from "bun:test";
+import { LibraClient } from "../../src/api/api";
+import { currentValidatorsPayload } from "../../src/payloads/validators";
+import { accountBalancePayload } from "../../src/payloads/common";
+import { testnetDown, testnetUp } from "../support/compose";
+
+beforeEach(async () => {
+  console.log("testnet setup");
+  // make sure we teardown any zombies first
+  await testnetDown();
+  await testnetUp();
+});
+
+afterEach(async () => {
+  await testnetDown().then(() => {
+    console.log("testnet down");
+  });
+});
 
 test("can get validators", async () => {
   console.log("Calling Libra Explorer API");
