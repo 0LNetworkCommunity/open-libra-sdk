@@ -1,4 +1,4 @@
-name: test
+name: e2e
 
 on:
   schedule:
@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  unit-tests:
+  e2e-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository
@@ -21,6 +21,6 @@ jobs:
       - name: install deps
         run: bun install
 
-      - name: unit tests
-        # NOTE: include e2e tests when docker libra-cli integrated to TestContainers
-        run: bun test keys
+      - name: e2e tests
+        # Note: will drive docker from within the bun test suite
+        run: bun test

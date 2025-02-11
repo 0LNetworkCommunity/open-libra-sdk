@@ -6,14 +6,14 @@ import type {
   Ed25519Account,
   InputGenerateTransactionOptions,
   MoveFunctionId,
+  Network,
   SimpleEntryFunctionArgumentTypes,
   SimpleTransaction,
 } from "@aptos-labs/ts-sdk";
 import { mnemonicToAccountObj } from "../crypto/keyFactory";
 import { signTransactionWithAuthenticatorDiem } from "../transaction/txSigning";
-import { submitAndWait } from "../transaction/submit";
-import { getOriginatingAddress } from "./walletUtil";
-import { wrapLibra } from "../api/vendorClient";
+
+import { Libra } from "../api/vendorClient";
 
 /**
  * CryptoWallet class provides functionalities for handling a cryptocurrency wallet.
@@ -26,6 +26,7 @@ export class LibraWallet {
    */
   readonly account: Ed25519Account;
   onchainAddress?: AccountAddress;
+  readonly libra: Libra;
 
   /**
    * Transaction options that can be modified based on user preferences.
@@ -36,12 +37,13 @@ export class LibraWallet {
    * Constructs a CryptoWallet instance by generating an account from a mnemonic phrase.
    * @param mnemonic - The mnemonic phrase used to generate the account.
    */
-  constructor(mnemonic: string) {
+  constructor(mnemonic: string, network?: Network, fullnode?: string) {
     this.account = mnemonicToAccountObj(mnemonic);
     this.tx_options = {
       maxGasAmount: 40000,
       gasUnitPrice: 100,
     }; // Default options
+    this.libra = new Libra(network, fullnode);
   }
 
   /**
@@ -49,7 +51,7 @@ export class LibraWallet {
    * authKey owns on chain.
    */
   async sync_onchain() {
-    this.onchainAddress = await getOriginatingAddress(
+    this.onchainAddress = await this.libra.getOriginatingAddress(
       this.account.publicKey.authKey(),
     );
   }
@@ -76,8 +78,7 @@ export class LibraWallet {
     entry_function: MoveFunctionId,
     args: Array<SimpleEntryFunctionArgumentTypes>,
   ): Promise<SimpleTransaction> {
-    const libra = wrapLibra();
-    return await libra.transaction.build.simple({
+    return await this.libra.transaction.build.simple({
       sender: this.onchainAddress ?? this.account.accountAddress,
       data: {
         function: entry_function,
@@ -108,11 +109,13 @@ export class LibraWallet {
     transaction: AnyRawTransaction,
   ): Promise<CommittedTransactionResponse> {
     const signerAuthenticator = this.signTransaction(transaction);
-    return submitAndWait(transaction, signerAuthenticator).then((res) => {
-      console.log(
-        `Transaction success: ${res.success}, vm_status: ${res.vm_status}`,
-      );
-      return res;
-    });
+    return this.libra
+      .submitAndWait(transaction, signerAuthenticator)
+      .then((res) => {
+        console.log(
+          `Transaction success: ${res.success}, vm_status: ${res.vm_status}`,
+        );
+        return res;
+      });
   }
 }

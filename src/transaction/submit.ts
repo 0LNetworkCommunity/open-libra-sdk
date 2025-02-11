@@ -2,13 +2,9 @@ import {
   AptosConfig,
   generateSignedTransaction,
   postAptosFullNode,
-  type AccountAuthenticatorEd25519,
-  type AnyRawTransaction,
-  type CommittedTransactionResponse,
   type InputSubmitTransactionData,
   type PendingTransactionResponse,
 } from "@aptos-labs/ts-sdk";
-import { wrapLibra } from "../api/vendorClient";
 import { MimeType } from "@aptos-labs/ts-sdk"; // Import MimeType from the vendor
 
 export async function submitTransactionDiem(
@@ -31,26 +27,4 @@ export async function submitTransactionDiem(
     contentType: "application/x.diem.signed_transaction+bcs" as MimeType,
   });
   return data;
-}
-
-export async function submitAndWait(
-  transaction: AnyRawTransaction,
-  authenticator: AccountAuthenticatorEd25519,
-): Promise<CommittedTransactionResponse> {
-  const libra = wrapLibra();
-  const args = {
-    transaction: transaction,
-    senderAuthenticator: authenticator,
-  };
-  const submittedTransaction = await submitTransactionDiem({
-    aptosConfig: libra.config,
-    ...args,
-  });
-
-  console.log(`Submitted transaction hash: ${submittedTransaction.hash}`);
-
-  // 5. Wait for results
-  return libra.waitForTransaction({
-    transactionHash: submittedTransaction.hash,
-  });
 }
