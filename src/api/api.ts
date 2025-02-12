@@ -2,7 +2,6 @@ import axios, { type AxiosInstance } from "axios";
 import type { EventObj, ViewObj } from "../payloads/types";
 import { TESTNET_SEED_NODES } from "../constants";
 
-
 export const MAINNET_URL: string = "https://rpc.scan.openlibra.world/v1";
 export const TESTNET_URL: string = "http://testnet.openlibra.io:8080/v1";
 // local e2e tests connection, libra-alice in local testnet
