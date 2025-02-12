@@ -30,7 +30,6 @@ test("can get validators", async () => {
 
   const p = await client.postViewFunc(currentValidatorsPayload);
   if (Array.isArray(p[0])) {
-    console.log(p[0].length);
     expect(p[0].length).toBeGreaterThan(1);
   } else {
     throw new Error("Expected p[0] to be an array");
@@ -51,5 +50,5 @@ test("can get balance", async () => {
     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
   );
   const p = await client.postViewFunc(b);
-  console.log(p);
+  expect(Number(p[0])).toBeGreaterThan(0);
 });

@@ -124,7 +124,7 @@ test(
   "can transfer",
   async () => {
     const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
-    await wallet.sync_onchain();
+    await wallet.syncOnchain();
 
     const addr_formatted = addressFromString(
       "0x37799DA327DB4C58D5E28E7DD6338F6B",
@@ -138,6 +138,40 @@ test(
     expect(t.success).toBeTrue();
   },
   { timeout: 30_000 },
+);
+
+test(
+  "can transfer multiple sequence numbers",
+  async () => {
+    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+    await wallet.syncOnchain();
+
+    const addr_formatted = addressFromString(
+      "0x37799DA327DB4C58D5E28E7DD6338F6B",
+    ).toString();
+
+    const tx_one = await wallet.buildTransaction("0x1::ol_account::transfer", [
+      addr_formatted,
+      100,
+    ]);
+    const t = await wallet.signSubmitWait(tx_one);
+    expect(t.success).toBeTrue();
+
+    // You can set the next sequence number manually
+    // with wallet.txOptions.accountSequenceNumber
+    // or fetch from the chain with syncOnchain
+    await wallet.syncOnchain();
+
+    const tx_two = await wallet.buildTransaction("0x1::ol_account::transfer", [
+      addr_formatted,
+      200,
+    ]);
+
+    const t2 = await wallet.signSubmitWait(tx_two);
+
+    expect(t2.success).toBeTrue();
+  },
+  { timeout: 40_000 },
 );
 
 test("can sign noop tx", async () => {

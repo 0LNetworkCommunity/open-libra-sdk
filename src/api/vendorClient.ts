@@ -54,7 +54,6 @@ export class Libra extends Aptos {
 
     console.log(`Submitted transaction hash: ${submittedTransaction.hash}`);
 
-    // 5. Wait for results
     return this.waitForTransaction({
       transactionHash: submittedTransaction.hash,
     });

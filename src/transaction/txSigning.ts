@@ -15,6 +15,7 @@ export function generateSigningMessageForTransactionDiem(
   transaction: AnyRawTransaction,
 ): Uint8Array {
   const rawTxn = deriveTransactionType(transaction);
+
   if (transaction.feePayerAddress) {
     return generateSigningMessageDiem(
       rawTxn.bcsToBytes(),
