@@ -169,7 +169,9 @@ Or use the `transfer` helper for simple account transfers.
 ```
 
 ## Troubleshooting
-There's a known issue where. Executing with `bun` to an `https` url API will fail. Since http/2 is not fully developed in `bun`. NodeJS (with npm, yarn, pnpm) does not appear to produce this error. Deno is untested.
+There's a known issue when executing using `bun`. Calling a fullnode with an `https` url API will fail. Since http/2 is not fully developed in `bun` as of 1.2.2.
+
+NodeJS (with npm, yarn, pnpm) does not appear to produce this error. Deno is untested.
 
 ## Flavors
 Look in the `./examples` folder for commonjs, Node, and typescript imports of the module.
