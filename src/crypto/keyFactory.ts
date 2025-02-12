@@ -96,12 +96,15 @@ export function mnemonicToEd25519PrivateKey(
   return new Ed25519PrivateKey(pk);
 }
 
-export function mnemonicToAccountObj(mnemonic: string): Ed25519Account {
+export function mnemonicToAccountObj(
+  mnemonic: string,
+  forceAddress?: AccountAddress,
+): Ed25519Account {
   const privateKey = mnemonicToEd25519PrivateKey(mnemonic);
 
   const authkey = mnemonicToAuthKey(mnemonic);
 
-  const address = AccountAddress.from(authkey);
+  const address = forceAddress ?? AccountAddress.from(authkey);
 
   return newAccount(privateKey, address);
 }

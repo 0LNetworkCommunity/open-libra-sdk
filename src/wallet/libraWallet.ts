@@ -4,13 +4,14 @@ import type {
   AnyRawTransaction,
   CommittedTransactionResponse,
   Ed25519Account,
+  Ed25519PrivateKey,
   InputGenerateTransactionOptions,
   MoveFunctionId,
   Network,
   SimpleEntryFunctionArgumentTypes,
   SimpleTransaction,
 } from "@aptos-labs/ts-sdk";
-import { mnemonicToAccountObj } from "../crypto/keyFactory";
+import { mnemonicToAccountObj, newAccount } from "../crypto/keyFactory";
 import { signTransactionWithAuthenticatorDiem } from "../transaction/txSigning";
 
 import { Libra } from "../api/vendorClient";
@@ -19,6 +20,8 @@ import { Libra } from "../api/vendorClient";
  * CryptoWallet class provides functionalities for handling a cryptocurrency wallet.
  * It allows generating an account from a mnemonic phrase, signing messages and transactions,
  * verifying signatures, and submitting transactions to the blockchain.
+ * It has modes for using online with a client, or offline for account recovery
+ * and tx signing only (cold wallet).
  */
 export class LibraWallet {
   /**
@@ -26,7 +29,7 @@ export class LibraWallet {
    */
   readonly account: Ed25519Account;
   onchainAddress?: AccountAddress;
-  readonly libra: Libra;
+  readonly client?: Libra;
 
   /**
    * Transaction options that can be modified based on user preferences.
@@ -36,14 +39,38 @@ export class LibraWallet {
   /**
    * Constructs a CryptoWallet instance by generating an account from a mnemonic phrase.
    * @param mnemonic - The mnemonic phrase used to generate the account.
+   * @param network - settings for MAINNET, TESTNET etc
+   * @param fullnode - the URL of upstream node. Troubleshooting: `bun` will error on HTTPS connections
+   * @param forceAddress - cold wallets: if the key has rotated you'll need to know the account in advance (or look it up on chain)
+   * @param privateKey - instead of mnemonic, can pass a private key.
+
    */
-  constructor(mnemonic: string, network?: Network, fullnode?: string) {
-    this.account = mnemonicToAccountObj(mnemonic);
+  constructor(
+    mnemonic?: string,
+    network?: Network,
+    fullnode?: string,
+    forceAddress?: AccountAddress,
+    privateKey?: Ed25519PrivateKey,
+  ) {
+    // easy mode: recover with mnemonic
+    if (mnemonic) {
+      this.account = mnemonicToAccountObj(mnemonic, forceAddress);
+    } else if (forceAddress && privateKey) {
+      this.account = newAccount(privateKey, forceAddress);
+    } else {
+      throw "ERROR: must provide recovery mnemonic, or account address and private key";
+    }
+
     this.txOptions = {
       maxGasAmount: 40000,
       gasUnitPrice: 100,
-    }; // Default options
-    this.libra = new Libra(network, fullnode);
+    }; // Default options can be changed after init
+
+    // if this is a connected wallet
+    // leave blank for offline tx signing, cold wallet purposes
+    if (network && fullnode) {
+      this.client = new Libra(network, fullnode);
+    }
   }
 
   /**
@@ -52,10 +79,12 @@ export class LibraWallet {
    */
   async syncOnchain() {
     const derived_authkey = this.account.publicKey.authKey();
+    if (!this.client) throw "Cold wallet can't connect to chain";
+
     this.onchainAddress =
-      await this.libra.getOriginatingAddress(derived_authkey);
+      await this.client.getOriginatingAddress(derived_authkey);
     if (this.onchainAddress) {
-      const account_data = await this.libra.account.getAccountInfo({
+      const account_data = await this.client.account.getAccountInfo({
         accountAddress: this.onchainAddress,
       });
 
@@ -90,7 +119,8 @@ export class LibraWallet {
     entry_function: MoveFunctionId,
     args: Array<SimpleEntryFunctionArgumentTypes>,
   ): Promise<SimpleTransaction> {
-    return await this.libra.transaction.build.simple({
+    if (!this.client) throw "Cold wallet can't connect to chain";
+    return await this.client.transaction.build.simple({
       sender: this.onchainAddress ?? this.account.accountAddress,
       data: {
         function: entry_function,
@@ -120,8 +150,10 @@ export class LibraWallet {
   async signSubmitWait(
     transaction: AnyRawTransaction,
   ): Promise<CommittedTransactionResponse> {
+    if (!this.client) throw "Cold wallet can't connect to chain";
+
     const signerAuthenticator = this.signTransaction(transaction);
-    return this.libra
+    return this.client
       .submitAndWait(transaction, signerAuthenticator)
       .then((res) => {
         console.log(
