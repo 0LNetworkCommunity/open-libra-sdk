@@ -154,6 +154,10 @@ Or use the `transfer` helper for simple account transfers.
 
 ```
     // ... continued from above
+
+    // remember to update the account sequence number like so:
+    await testnetHotWallet.syncOnchain();
+    // send another transaction
     const tx2 = await testnetHotWallet.buildTransferTx(
       addressFromString("0xabcde"),
       100,
@@ -162,7 +166,6 @@ Or use the `transfer` helper for simple account transfers.
     if (res2.success == false) {
       throw "Tx failed";
     }
-
 ```
 
 ## Troubleshooting
@@ -231,3 +234,6 @@ bun test
 ```
 
 End to end tests will start a local testnet before each test, and requires `docker` be installed.
+
+### Documentation
+The examples references in README.md must all be tested at: `./tests/e2e_tests/docs.tests.ts`

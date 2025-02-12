@@ -141,6 +141,20 @@ test(
         testnetHotWallet.txOptions.accountSequenceNumber,
       );
     });
+  },
+  { timeout: 40_000 },
+);
+
+
+test(
+  "build transactions instructions work",
+  async () => {
+    // Online wallet, using local docker testnet
+    const testnetHotWallet = new LibraWallet(
+      MNEM,
+      Network.TESTNET,
+      "http://localhost:8280/v1",
+    );
 
     // ... continued from above
 
@@ -159,6 +173,9 @@ test(
     }
 
     // ... continued from above
+    // remember to update the account sequence number like so:
+    await testnetHotWallet.syncOnchain();
+    // send another transaction
     const tx2 = await testnetHotWallet.buildTransferTx(
       addressFromString("0xabcde"),
       100,
