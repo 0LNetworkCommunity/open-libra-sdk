@@ -1,35 +1,69 @@
-# libra-ts-sdk
+# open-libra-sdk
 
 A minimalist Typescript library for interacting with the Open Libra blockchain.
 
 ```
 npm install open-libra-sdk
 ```
+[https://www.npmjs.com/package/open-libra-sdk](https://www.npmjs.com/package/open-libra-sdk)
+
+### Quick Start
+```
+  // Uses LibraWallet for common account operations
+  import { LibraWallet, Network, addressFromString } from 'open-libra-sdk'
+  const MNEM = "your mnemonic..."
+
+  // For mainnet, just initialize with your mnemonic
+  const wallet = new LibraWallet(MNEM);
+
+  // optionally, connect to a local testnet, by adding vars
+  // const wallet = new LibraWallet(MNEM, Network.TESTNET, 'http://localhost:8280/v1');
+
+  // check your connection to the fullnode
+  const ledgerInfo = await wallet.client?.getLedgerInfo();
+  console.log("block height:", ledgerInfo?.block_height);
+
+  // get the account's state from chain
+  await wallet.syncOnchain();
+
+  // parse an address which you'd like to send a tx to
+  const addressObj = addressFromString(
+    "0xDECAFC0FFEE",
+  );
+
+  // use the transfer helper function
+  const tx = await wallet.buildTransferTx(addressObj, 100);
+  // wait for the result
+  const res = await wallet.signSubmitWait(tx);
+
+  if (res.success == false) {
+    throw "Tx fails"
+  }
+```
 
 ## Common Transactions
 
-#### Check your connection
-Check you can connect to a fullnode, and get the API index with latest block info
+#### Create a client
+You may not need to instantiate a wallet to check the chain status. Below you can check you can connect to a fullnode, and get the API index with latest block info
 
 ```
-  import { Libra } from 'open-libra-sdk'
-  // get the mainnet fullnode
+  import { Libra, Network } from 'open-libra-sdk'
+  // for mainnet
   const libra = new Libra();
-
-  // optionally or for a dockerize local testnet
-  const libra = new Libra(Network.test, 'localhost:8480/v1');
+  // local testnet
+  const libra = new Libra(Network.TESTNET, 'http://localhost:8480/v1');
 
   const ledgerInfo = await libra.getLedgerInfo();
 ```
 
 #### Fetch Some Data
 
-
-You can define a Type, and the get_resource will coerce the type in typescript
+You can define a Type, and the Libra.getResource will coerce the type in typescript
 
 ```
-  import {get_resource, Libra} from 'open-libra-sdk'
-  const libra = new Libra();
+
+  // import { Libra } from 'open-libra-sdk'
+  const libra = new Libra(Network.TESTNET, 'http://localhost:8280/v1');
 
   interface Coin {
     coin: {
@@ -37,48 +71,101 @@ You can define a Type, and the get_resource will coerce the type in typescript
     };
   }
 
-  const res = await libra.get_resource<Coin>(
-    "0x4c613c2f4b1e67ca8d98a542ee3f59f5",
+  const res = await libra.getResource<Coin>(
+    // alice
+    "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
     "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
   );
+  if (res.coin.value == 0) {
+    throw "no coin found"
+  }
 
 ```
 
 #### Initialize a wallet
 
 ```
-  // requires that you are connected to a fullnode
-  const wallet = new LibraWallet("your mnemonic");
-  // sync on-chain (and check the account address is correct)
-  await wallet.sync_onchain();
+    // You can construct the wallet object for offline (cold wallet)
+    // cases as well as online wallets to update state and submit transactions
+
+    // COLD WALLETS
+    // simple case: cold wallet, where no key rotation happened
+    const coldWalletFromMnem = new LibraWallet(MNEM);
+    console.log("address:", coldWalletFromMnem.getAddress().toStringLong());
+
+    // set specific private key and address: in case of key rotation
+    const addressObj = addressFromString("0xDECAFC0FFEE");
+    const pkey = new Ed25519PrivateKey(
+      "0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b"
+    );
+    const coldWalletWithKey = new LibraWallet(
+      undefined,
+      undefined,
+      undefined,
+      addressObj,
+      pkey,
+    );
+    console.log("other address:", coldWalletWithKey.getAddress().toStringLong());
+
+    // ONLINE WALLETS
+    const mainnetHotWallet = new LibraWallet(
+      MNEM,
+      Network.MAINNET,
+      MAINNET_URL,
+    );
+    console.log("fullnode url:", mainnetHotWallet.client?.config.fullnode);
+
+    // Online wallet, using testnet
+    const testnetHotWallet = new LibraWallet(
+      MNEM,
+      Network.TESTNET,
+      "http://localhost:8280/v1",
+    );
+
+    // Get the latest account state.
+    // Checks if key is rotated and update the LibraWallet.onchainAddress
+    // will also update to the most recent sequence number found on chain
+    // plus if the authentication key was changed
+    await testnetHotWallet.syncOnchain()
+      .then(() => {
+        console.log("sequence number:", testnetHotWallet.txOptions.accountSequenceNumber);
+      });
 ```
 
-Build transactions for Entry Functions
-```
-  const addr_formatted = addressFromString(
-    "0xDECAFC0FFEE",
-  ).toString();
-
-  const tx = await wallet.buildTransaction("0x1::ol_account::transfer", [
-    addr_formatted,
-    100,
-  ]);
-  const t = await wallet.signSubmitWait(tx);
-```
-
-Or use the `transfer` helper
+#### Build transactions for Entry Functions
+Using the same wallet function above you can build arbitrary "entry functions" which call onchain smart contracts.
 
 ```
-  const wallet = new LibraWallet("your mnemonic");
-  await wallet.sync_onchain();
+    // ... continued from above
 
-  const address_obj = addressFromString(
-    "0xDECAFC0FFEE",
-  );
+    const tx = await testnetHotWallet.buildTransaction("0x1::ol_account::transfer", [
+      // address string (here's a good practice to check address parsing)
+      addressFromString("0x1234abcde").toStringLong(),
+      // number of coins
+      100,
+    ]);
+    const t = await testnetHotWallet.signSubmitWait(tx);
+    if (t.success == false ) {
+      throw "Tx failed"
+    }
+```
 
-  const tx = await wallet.transfer(address_obj, 100);
-  const res = await wallet.signSubmitWait(tx);
+Or use the `transfer` helper for simple account transfers.
 
+```
+    // ... continued from above
+
+    // remember to update the account sequence number like so:
+    await testnetHotWallet.syncOnchain();
+    // send another transaction
+    const tx2 = await testnetHotWallet.buildTransferTx(
+      addressFromString("0xabcde"),
+      100,
+    );
+    const res2 = await testnetHotWallet.signSubmitWait(tx2);
+    if (res2.success == false) {
+      throw "Tx failed";
+    }
 ```
 
 ## Troubleshooting
@@ -98,18 +185,34 @@ const main = async () => {
 
   console.log(mnem, "\n");
 
-  console.log("Calling Libra Explorer API");
-  const client = new libraSDK.LibraClient();
-  await client.connect();
-  client.assertReady();
+  let coldWallet = new libraSDK.LibraWallet(mnem);
+  console.log(coldWallet.get_address().toStringLong())
 
-  const res = await client.getIndex();
-  console.log(res)
+  const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.MAINNET_URL);
+
+  const ledgerInfo = await mainnetWallet.client.getLedgerInfo();
+  console.log(ledgerInfo);
 }
 
 main()
 
 ```
+
+# Testnet in a bottle
+Start a containerized testnet with docker etc.
+This repo contains a `tests/support/container/compose.yml` which will create a three node testnet with production binaries.
+
+```
+# with npm/yarn/bun:
+bun run testnet
+bun run testnet-down
+
+## call docker directly with:
+cd tests/support/container
+docker compose up --detach --timeout 600
+docker compose down
+```
+
 
 # Maintainers
 
@@ -129,3 +232,8 @@ bun install
 ```bash
 bun test
 ```
+
+End to end tests will start a local testnet before each test, and requires `docker` be installed.
+
+### Documentation
+The examples references in README.md must all be tested at: `./tests/e2e_tests/docs.tests.ts`

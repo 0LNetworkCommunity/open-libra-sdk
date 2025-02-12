@@ -11,7 +11,7 @@ import {
   type InputViewFunctionJsonData,
   type MoveValue,
 } from "@aptos-labs/ts-sdk";
-import { CANONICAL_URL } from "./api";
+import { MAINNET_URL } from "./api";
 import { addressFromString } from "../crypto/keyFactory";
 import { submitTransactionDiem } from "../transaction/submit";
 
@@ -22,13 +22,13 @@ export class Libra extends Aptos {
     // 0. Setup the client and test accounts
     const config = new AptosConfig({
       network: network ?? Network.MAINNET,
-      fullnode: fullnode ?? CANONICAL_URL,
+      fullnode: fullnode ?? MAINNET_URL,
     });
 
     super(config);
   }
 
-  async get_resource<T extends object>(
+  async getResource<T extends object>(
     account: string,
     struct_id: MoveStructId,
   ): Promise<T> {

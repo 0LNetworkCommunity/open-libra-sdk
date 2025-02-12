@@ -1,12 +1,15 @@
 // Example for how a node module would import the sdk
 
-import { generateMnemonic }  from '../dist/index.mjs';
+import { generateMnemonic, LibraWallet }  from '../dist/index.mjs';
 
 const main = async () => {
   const mnem = generateMnemonic();
   console.log("Generate a mnemonic:\n");
 
   console.log(mnem, "\n");
+
+  let coldWallet = new LibraWallet(mnem);
+  console.log(coldWallet.getAddress().toStringLong())
 }
 
 main()

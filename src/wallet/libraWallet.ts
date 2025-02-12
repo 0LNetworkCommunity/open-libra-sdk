@@ -97,7 +97,7 @@ export class LibraWallet {
     }
   }
 
-  get_address(): AccountAddress {
+  getAddress(): AccountAddress {
     return this.onchainAddress ?? this.account.accountAddress;
   }
 
