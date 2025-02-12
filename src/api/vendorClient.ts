@@ -28,7 +28,7 @@ export class Libra extends Aptos {
     super(config);
   }
 
-  async get_resource<T extends object>(
+  async getResource<T extends object>(
     account: string,
     struct_id: MoveStructId,
   ): Promise<T> {

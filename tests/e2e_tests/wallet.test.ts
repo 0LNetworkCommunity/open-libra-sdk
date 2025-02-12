@@ -36,7 +36,7 @@ test("can get originating address", async () => {
 test("can recover address", async () => {
   const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
   await wallet.syncOnchain();
-  const addr = wallet.get_address();
+  const addr = wallet.getAddress();
   expect(addr.toString()).toBe(
     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
   );

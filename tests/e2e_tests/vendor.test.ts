@@ -31,7 +31,7 @@ test("can get resource", async () => {
   }
   const libra = new Libra(Network.TESTNET, DEBUG_URL);
 
-  const res = await libra.get_resource<Coin>(
+  const res = await libra.getResource<Coin>(
     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
     "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
   );

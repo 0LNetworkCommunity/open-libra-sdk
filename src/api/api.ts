@@ -2,7 +2,7 @@ import axios, { type AxiosInstance } from "axios";
 import type { EventObj, ViewObj } from "../payloads/types";
 import { TESTNET_SEED_NODES } from "../constants";
 
-export const DEBUG_URL: string = "http://localhost:8480/v1";
+export const DEBUG_URL: string = "http://localhost:8280/v1"; // libra-alice in local testnet
 export const CANONICAL_URL: string = "https://rpc.scan.openlibra.world/v1";
 
 export class LibraClient {
