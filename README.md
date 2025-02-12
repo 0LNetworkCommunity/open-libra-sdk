@@ -182,10 +182,13 @@ const main = async () => {
 
   console.log(mnem, "\n");
 
-  console.log("Calling Local Test API");
-  const libra = new libraSDK.Libra(Network.TESTNET, 'http://localhost:8480/v1');
+  let coldWallet = new libraSDK.LibraWallet(mnem);
+  console.log(coldWallet.get_address().toStringLong())
 
-  const ledgerInfo = await libra.getLedgerInfo();
+  const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.CANONICAL_URL);
+
+  const ledgerInfo = await mainnetWallet.client.getLedgerInfo();
+  console.log(ledgerInfo);
 }
 
 main()
