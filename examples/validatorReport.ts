@@ -1,6 +1,6 @@
-import { LibraClient } from "../api/api";
-import { currentValidatorsPayload } from "../payloads/validators";
-import { currentValidators } from "../sugar/validatorHelpers";
+import { LibraClient } from "../src/api/api";
+import { currentValidatorsPayload } from "../src/payloads/validators";
+import { currentValidators } from "../src/sugar/validatorHelpers";
 
 console.log("Calling Libra Explorer API");
 const client = new LibraClient();

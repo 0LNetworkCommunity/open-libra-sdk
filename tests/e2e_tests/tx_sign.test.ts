@@ -13,7 +13,6 @@ import {
   signTransactionWithAuthenticatorDiem,
 } from "../../src/transaction/txSigning";
 import {
-  Aptos,
   Deserializer,
   Network,
   SimpleTransaction,
@@ -151,26 +150,28 @@ test(
       "0x37799DA327DB4C58D5E28E7DD6338F6B",
     ).toString();
 
-    const tx = await wallet.buildTransaction("0x1::ol_account::transfer", [
+    const tx_one = await wallet.buildTransaction("0x1::ol_account::transfer", [
       addr_formatted,
       100,
     ]);
-    const t = await wallet.signSubmitWait(tx);
+    const t = await wallet.signSubmitWait(tx_one);
     expect(t.success).toBeTrue();
 
-    // // get latest sequence number
+    // You can set the next sequence number manually
+    // with wallet.txOptions.accountSequenceNumber
+    // or fetch from the chain with syncOnchain
     await wallet.syncOnchain();
-    wallet.txOptions.accountSequenceNumber = 1;
-    const tx2 = await wallet.buildTransaction("0x1::ol_account::transfer", [
+
+    const tx_two = await wallet.buildTransaction("0x1::ol_account::transfer", [
       addr_formatted,
       200,
     ]);
-    console.log(tx2.rawTransaction.sequence_number);
-    const t2 = await wallet.signSubmitWait(tx);
-    expect(t2.success).toBeTrue();
 
+    const t2 = await wallet.signSubmitWait(tx_two);
+
+    expect(t2.success).toBeTrue();
   },
-  { timeout: 30_000 },
+  { timeout: 40_000 },
 );
 
 test("can sign noop tx", async () => {

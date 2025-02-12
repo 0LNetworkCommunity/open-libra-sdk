@@ -51,16 +51,19 @@ export class LibraWallet {
    * authKey owns on chain.
    */
   async syncOnchain() {
-    const derived_authkey = this.account.publicKey.authKey()
-    this.onchainAddress = await this.libra.getOriginatingAddress(
-      derived_authkey,
-    );
+    const derived_authkey = this.account.publicKey.authKey();
+    this.onchainAddress =
+      await this.libra.getOriginatingAddress(derived_authkey);
     if (this.onchainAddress) {
-      const account_data = await this.libra.account.getAccountInfo({accountAddress: this.onchainAddress});
-      console.log(account_data);
-      this.txOptions.accountSequenceNumber = Number(account_data.sequence_number);
+      const account_data = await this.libra.account.getAccountInfo({
+        accountAddress: this.onchainAddress,
+      });
+
+      this.txOptions.accountSequenceNumber = Number(
+        account_data.sequence_number,
+      );
       if (derived_authkey.toString() != account_data.authentication_key) {
-        throw "Derived authentication key does not match the one on-chain, cannot submit transactions"
+        throw "Derived authentication key does not match the one on-chain, cannot submit transactions";
       }
     }
   }
