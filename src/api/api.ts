@@ -2,9 +2,11 @@ import axios, { type AxiosInstance } from "axios";
 import type { EventObj, ViewObj } from "../payloads/types";
 import { TESTNET_SEED_NODES } from "../constants";
 
-export const DEBUG_URL: string = "http://localhost:8280/v1"; // libra-alice in local testnet
-export const CANONICAL_URL: string = "https://rpc.scan.openlibra.world/v1";
 
+export const MAINNET_URL: string = "https://rpc.scan.openlibra.world/v1";
+export const TESTNET_URL: string = "http://testnet.openlibra.io:8080/v1";
+// local e2e tests connection, libra-alice in local testnet
+export const DOCKER_URL: string = "http://localhost:8280/v1";
 export class LibraClient {
   url: string;
   note: string;
@@ -13,7 +15,7 @@ export class LibraClient {
   client: AxiosInstance;
 
   constructor(url?: string, note?: string) {
-    this.url = url ? url : DEBUG_URL;
+    this.url = url ? url : DOCKER_URL;
     this.note = note ? note : this.url;
     this.connected = false;
     this.client = axios.create({

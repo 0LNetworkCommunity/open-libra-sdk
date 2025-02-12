@@ -19,7 +19,7 @@ import {
   type InputGenerateTransactionOptions,
 } from "@aptos-labs/ts-sdk";
 import { submitTransactionDiem } from "../../src/transaction/submit";
-import { DEBUG_URL, LibraWallet } from "../../src";
+import { DOCKER_URL, LibraWallet } from "../../src";
 import { testnetDown, testnetUp } from "../support/compose";
 
 beforeEach(async () => {
@@ -36,7 +36,7 @@ afterEach(async () => {
 });
 
 test("can sign noop tx", async () => {
-  const libra = new Libra(Network.TESTNET, DEBUG_URL);
+  const libra = new Libra(Network.TESTNET, DOCKER_URL);
 
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);
@@ -72,7 +72,7 @@ test("can sign noop tx", async () => {
 test(
   "can submit noop tx",
   async () => {
-    const libra = new Libra(Network.TESTNET, DEBUG_URL);
+    const libra = new Libra(Network.TESTNET, DOCKER_URL);
 
     const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
     const authKey = publicKeyToAuthKey(alice_obj.publicKey);
@@ -123,7 +123,7 @@ test(
 test(
   "can transfer",
   async () => {
-    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
     await wallet.syncOnchain();
 
     const addr_formatted = addressFromString(
@@ -143,7 +143,7 @@ test(
 test(
   "can transfer multiple sequence numbers",
   async () => {
-    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
     await wallet.syncOnchain();
 
     const addr_formatted = addressFromString(
@@ -175,7 +175,7 @@ test(
 );
 
 test("can sign noop tx", async () => {
-  const libra = new Libra(Network.TESTNET, DEBUG_URL);
+  const libra = new Libra(Network.TESTNET, DOCKER_URL);
 
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);
@@ -210,7 +210,7 @@ test("can sign noop tx", async () => {
 
 test("cold wallet workflow", async () => {
   // Prepare transaction in online environment
-  const libra = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+  const libra = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
 
   const marlon_addr = addressFromString("0x37799DA327DB4C58D5E28E7DD6338F6B");
 

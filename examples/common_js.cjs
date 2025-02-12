@@ -12,7 +12,7 @@ const main = async () => {
   console.log(coldWallet.getAddress().toStringLong())
 
   // optionally connect instantiate a wallet with a client for mainnet
-  // const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.CANONICAL_URL);
+  // const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.MAINNET_URL);
 
   // const ledgerInfo = await mainnetWallet.client.getLedgerInfo();
   // console.log(ledgerInfo);

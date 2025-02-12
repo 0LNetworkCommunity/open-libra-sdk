@@ -9,7 +9,7 @@ import { testnetDown, testnetUp } from "../support/compose";
 import { addressFromString } from "../../src/crypto/keyFactory";
 import { Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
 import { Libra } from "../../src/api/vendorClient";
-import { CANONICAL_URL } from "../../src";
+import { MAINNET_URL } from "../../src";
 beforeEach(async () => {
   console.log("testnet setup");
   // make sure we teardown any zombies first
@@ -120,7 +120,7 @@ test(
     const mainnetHotWallet = new LibraWallet(
       MNEM,
       Network.MAINNET,
-      CANONICAL_URL,
+      MAINNET_URL,
     );
     console.log("fullnode url:", mainnetHotWallet.client?.config.fullnode);
 

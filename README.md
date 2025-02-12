@@ -111,7 +111,7 @@ You can define a Type, and the Libra.getResource will coerce the type in typescr
     const mainnetHotWallet = new LibraWallet(
       MNEM,
       Network.MAINNET,
-      CANONICAL_URL,
+      MAINNET_URL,
     );
     console.log("fullnode url:", mainnetHotWallet.client?.config.fullnode);
 
@@ -188,7 +188,7 @@ const main = async () => {
   let coldWallet = new libraSDK.LibraWallet(mnem);
   console.log(coldWallet.get_address().toStringLong())
 
-  const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.CANONICAL_URL);
+  const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.MAINNET_URL);
 
   const ledgerInfo = await mainnetWallet.client.getLedgerInfo();
   console.log(ledgerInfo);

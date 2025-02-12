@@ -7,7 +7,7 @@ import { ALICE_MNEM } from "../support/fixture_mnemonics";
 import { LibraWallet } from "../../src/wallet/libraWallet";
 import { Libra } from "../../src/api/vendorClient";
 import { Network } from "@aptos-labs/ts-sdk";
-import { DEBUG_URL } from "../../src";
+import { DOCKER_URL } from "../../src";
 import { testnetDown, testnetUp } from "../support/compose";
 
 beforeEach(async () => {
@@ -26,7 +26,7 @@ afterEach(async () => {
 test("can get originating address", async () => {
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);
-  const libra = new Libra(Network.TESTNET, DEBUG_URL);
+  const libra = new Libra(Network.TESTNET, DOCKER_URL);
   const addr = await libra.getOriginatingAddress(authKey);
   expect(addr.toString()).toBe(
     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
@@ -34,7 +34,7 @@ test("can get originating address", async () => {
 });
 
 test("can recover address", async () => {
-  const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DEBUG_URL);
+  const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
   await wallet.syncOnchain();
   const addr = wallet.getAddress();
   expect(addr.toString()).toBe(
