@@ -182,18 +182,31 @@ const main = async () => {
 
   console.log(mnem, "\n");
 
-  console.log("Calling Libra Explorer API");
-  const client = new libraSDK.LibraClient();
-  await client.connect();
-  client.assertReady();
+  console.log("Calling Local Test API");
+  const libra = new libraSDK.Libra(Network.TESTNET, 'http://localhost:8480/v1');
 
-  const res = await client.getIndex();
-  console.log(res)
+  const ledgerInfo = await libra.getLedgerInfo();
 }
 
 main()
 
 ```
+
+# Testnet in a bottle
+Start a containerized testnet with docker etc.
+This repo contains a `tests/support/container/compose.yml` which will create a three node testnet with production binaries.
+
+```
+# with npm/yarn/bun:
+bun run testnet
+bun run testnet-down
+
+## call docker directly with:
+cd tests/support/container
+docker compose up --detach --timeout 600
+docker compose down
+```
+
 
 # Maintainers
 
