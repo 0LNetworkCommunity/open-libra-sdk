@@ -1,4 +1,3 @@
-
 // Re-export browser compatible modules
 export * from "./indexBrowser.ts";
 
