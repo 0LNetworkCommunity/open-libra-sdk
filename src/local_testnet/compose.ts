@@ -15,6 +15,8 @@ const options: IDockerComposeOptions = {
   // log: true,
 };
 
+export const LOCAL_TESTNET_API: string = "http://localhost:8380/v1";
+
 export async function testnetUp(): Promise<boolean> {
   await upAll(options);
 
