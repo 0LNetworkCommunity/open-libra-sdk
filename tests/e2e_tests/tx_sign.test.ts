@@ -6,7 +6,7 @@ import {
   publicKeyToAuthKey,
 } from "../../src/crypto/keyFactory";
 import { Libra } from "../../src/api/vendorClient";
-import { ALICE_MNEM } from "../support/fixture_mnemonics";
+import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
 import {
   generateSigningMessageForTransactionDiem,
   signTransactionDiem,
@@ -20,7 +20,7 @@ import {
 } from "@aptos-labs/ts-sdk";
 import { submitTransactionDiem } from "../../src/transaction/submit";
 import { DOCKER_URL, LibraWallet } from "../../src";
-import { testnetDown, testnetUp } from "../support/compose";
+import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 
 beforeEach(async () => {
   console.log("testnet setup");
