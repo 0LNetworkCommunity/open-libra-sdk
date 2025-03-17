@@ -1,6 +1,6 @@
 {
   "name": "open-libra-sdk",
-  "version": "1.0.4-beta.0",
+  "version": "1.0.4-beta.1",
   "description": "A minimalist Typescript library for interacting with the Open Libra blockchain.",
   "homepage": "https://github.com/0LNetworkCommunity/open-libra-sdk#readme",
   "bugs": {
@@ -13,8 +13,23 @@
   "license": "UNLICENSED",
   "author": "",
   "type": "module",
-  "main": "dist/index.ts",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "browser": "./dist/browser.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "browser": "./dist/browser.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "directories": {
     "example": "examples",
     "test": "tests"
@@ -27,8 +42,7 @@
     "release:cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=node --format=cjs --minify",
     "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify",
     "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
-    "release:ts": "bun build src/index.ts --target=node --format=esm --outfile ./dist/index.ts --minify",
-    "release": "bun release:ts-types && bun release:cjs && bun release:node &&bun release:ts && bun release:ts-types && bun release:browser",
+    "release": "rm -rf dist && bun release:ts-types && bun release:cjs && bun release:node && bun release:browser",
     "testnet": "cd src/local_testnet/container && docker compose up --detach --timeout 600",
     "testnet-stop": "cd src/local_testnet/container && docker compose stop"
   },
