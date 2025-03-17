@@ -1,6 +1,6 @@
 {
   "name": "open-libra-sdk",
-  "version": "1.0.4-beta.1",
+  "version": "1.0.4-beta.2",
   "description": "A minimalist Typescript library for interacting with the Open Libra blockchain.",
   "homepage": "https://github.com/0LNetworkCommunity/open-libra-sdk#readme",
   "bugs": {
@@ -16,11 +16,13 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "browser": "./dist/browser.js",
+  "react-native": "./dist/index.mjs",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
       "browser": "./dist/browser.js",
+      "react-native": "./dist/index.mjs",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs",
       "default": "./dist/index.mjs"
@@ -66,5 +68,12 @@
   },
   "peerDependencies": {
     "typescript": "^5.7.3"
-  }
+  },
+  "keywords": [
+    "libra",
+    "blockchain",
+    "react-native",
+    "typescript",
+    "sdk"
+  ]
 }
