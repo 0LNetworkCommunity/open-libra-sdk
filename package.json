@@ -30,7 +30,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "dist/*.map"
   ],
   "directories": {
     "example": "examples",
@@ -40,9 +41,9 @@
     "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}' && bunx tsc --noEmit --skipLibCheck",
     "types-check": "bunx tsc --noEmit --skipLibCheck",
     "format": "eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
-    "release:browser": "bun build src/indexBrowser.ts --outfile=./dist/browser.js --target=browser --format=cjs --minify --tree-shaking=true",
-    "release:cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=node --format=cjs --minify --tree-shaking=true",
-    "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify --tree-shaking=true",
+    "release:browser": "bun build src/indexBrowser.ts --outfile=./dist/browser.js --target=browser --format=cjs --minify --tree-shaking=true --sourcemap",
+    "release:cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=node --format=cjs --minify --tree-shaking=true --sourcemap",
+    "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify --tree-shaking=true --sourcemap",
     "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
     "release": "rm -rf dist && bun release:ts-types && bun release:cjs && bun release:node && bun release:browser",
     "testnet": "cd src/local_testnet/container && docker compose up --detach --timeout 600",
