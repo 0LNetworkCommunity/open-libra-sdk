@@ -13,25 +13,24 @@
   "license": "UNLICENSED",
   "author": "",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "browser": "./dist/browser.js",
-  "react-native": "./dist/index.mjs",
+  "main": "./dist/esm/index.mjs",
+  "module": "./dist/esm/index.mjs",
+  "browser": "./dist/browser/index.js",
+  "react-native": "./dist/esm/index.mjs",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "browser": "./dist/browser.js",
-      "react-native": "./dist/index.mjs",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.mjs"
+      "browser": "./dist/browser/index.js",
+      "react-native": "./dist/esm/index.mjs",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs",
+      "default": "./dist/esm/index.mjs"
     }
   },
   "files": [
     "dist",
-    "src",
-    "dist/*.map"
+    "src"
   ],
   "directories": {
     "example": "examples",
@@ -41,11 +40,11 @@
     "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}' && bunx tsc --noEmit --skipLibCheck",
     "types-check": "bunx tsc --noEmit --skipLibCheck",
     "format": "eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
-    "release:browser": "bun build src/indexBrowser.ts --outfile=./dist/browser.js --target=browser --format=cjs --minify --tree-shaking=true --sourcemap",
-    "release:cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=node --format=cjs --minify --tree-shaking=true --sourcemap",
-    "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify --tree-shaking=true --sourcemap",
+    "release:browser": "bun build src/indexBrowser.ts --outdir=dist/browser --entry-naming='[dir]/index.js' --target=browser --format=cjs --minify --tree-shaking=true --sourcemap",
+    "release:cjs": "bun build src/index.ts --outdir=dist/cjs --entry-naming='[dir]/index.cjs' --target=node --format=cjs --minify --tree-shaking=true --sourcemap",
+    "release:esm": "bun build src/index.ts --outdir=dist/esm --target=node --entry-naming='[dir]/index.mjs' --format=esm --minify --tree-shaking=true --sourcemap",
     "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
-    "release": "rm -rf dist && bun release:ts-types && bun release:cjs && bun release:node && bun release:browser",
+    "release": "rm -rf dist && bun release:ts-types && bun release:cjs && bun release:esm && bun release:browser",
     "testnet": "cd src/local_testnet/container && docker compose up --detach --timeout 600",
     "testnet-stop": "cd src/local_testnet/container && docker compose stop"
   },
