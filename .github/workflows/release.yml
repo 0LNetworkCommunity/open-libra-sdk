@@ -3,7 +3,8 @@ name: check-release
 on:
   push:
     branches: ['*']
-
+  pull_request:
+    types: [opened, synchronize]
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
