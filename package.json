@@ -1,6 +1,6 @@
 {
   "name": "open-libra-sdk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A minimalist Typescript library for interacting with the Open Libra blockchain.",
   "homepage": "https://github.com/0LNetworkCommunity/open-libra-sdk#readme",
   "bugs": {
@@ -13,8 +13,25 @@
   "license": "UNLICENSED",
   "author": "",
   "type": "module",
-  "main": "dist/index.ts",
-  "types": "dist/index.d.ts",
+  "main": "./dist/esm/index.mjs",
+  "module": "./dist/esm/index.mjs",
+  "browser": "./dist/browser/index.js",
+  "react-native": "./dist/esm/index.mjs",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "browser": "./dist/browser/index.js",
+      "react-native": "./dist/esm/index.mjs",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs",
+      "default": "./dist/esm/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "directories": {
     "example": "examples",
     "test": "tests"
@@ -23,13 +40,13 @@
     "lint": "eslint './{src,tests}/**/*.{ts,tsx}' && prettier --check './{src,tests}/**/*.{ts,tsx}' && bunx tsc --noEmit --skipLibCheck",
     "types-check": "bunx tsc --noEmit --skipLibCheck",
     "format": "eslint --fix './{src,tests}/**/*.{ts,tsx}' && prettier --no-config --write './{src,tests}/**/*.{ts,tsx}'",
-    "release:cjs": "bun build src/index.ts --outfile=./dist/index.cjs --target=browser --format=cjs --minify",
-    "release:node": "bun build src/index.ts --outfile=./dist/index.mjs --target=node --format=esm --minify",
+    "release:browser": "bun build src/indexBrowser.ts --outdir=dist/browser --entry-naming='[dir]/index.js' --target=browser --format=cjs --minify --tree-shaking=true --sourcemap",
+    "release:cjs": "bun build src/index.ts --outdir=dist/cjs --entry-naming='[dir]/index.cjs' --target=node --format=cjs --minify --tree-shaking=true --sourcemap",
+    "release:esm": "bun build src/index.ts --outdir=dist/esm --target=node --entry-naming='[dir]/index.mjs' --format=esm --minify --tree-shaking=true --sourcemap",
     "release:ts-types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
-    "release:ts": "bun build src/index.ts ---format=esm --outfile ./dist/index.ts --minify",
-    "release": "bun release:ts-types && bun release:cjs && bun release:node &&bun release:ts && bun release:ts-types",
-    "testnet": "cd tests/support/container && docker compose up --detach --timeout 600",
-    "testnet-stop": "cd tests/support/container && docker compose stop"
+    "release": "rm -rf dist && bun release:ts-types && bun release:cjs && bun release:esm && bun release:browser",
+    "testnet": "cd src/local_testnet/container && docker compose up --detach --timeout 600",
+    "testnet-stop": "cd src/local_testnet/container && docker compose stop"
   },
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.33.2",
@@ -51,5 +68,13 @@
   },
   "peerDependencies": {
     "typescript": "^5.7.3"
-  }
+  },
+  "keywords": [
+    "libra",
+    "blockchain",
+    "react-native",
+    "typescript",
+    "sdk"
+  ],
+  "sideEffects": false
 }

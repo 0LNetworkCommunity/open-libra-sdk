@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, test } from "bun:test";
 import { Libra } from "../../src/api/vendorClient";
 import { Network } from "@aptos-labs/ts-sdk";
 import { DOCKER_URL } from "../../src";
-import { testnetDown, testnetUp } from "../support/compose";
+import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 
 beforeEach(async () => {
   console.log("testnet setup");

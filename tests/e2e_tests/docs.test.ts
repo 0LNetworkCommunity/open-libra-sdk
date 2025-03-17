@@ -4,8 +4,8 @@
 
 import { afterEach, beforeEach, test } from "bun:test";
 import { LibraWallet } from "../../src/wallet/libraWallet";
-import { ALICE_MNEM } from "../support/fixture_mnemonics";
-import { testnetDown, testnetUp } from "../support/compose";
+import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
+import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 import { addressFromString } from "../../src/crypto/keyFactory";
 import { Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
 import { Libra } from "../../src/api/vendorClient";

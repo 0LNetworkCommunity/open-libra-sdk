@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, test } from "bun:test";
 import { LibraClient } from "../../src/api/api";
 import { currentValidatorsPayload } from "../../src/payloads/validators";
 import { accountBalancePayload } from "../../src/payloads/common";
-import { testnetDown, testnetUp } from "../support/compose";
+import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 
 beforeEach(async () => {
   console.log("testnet setup");

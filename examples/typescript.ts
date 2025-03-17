@@ -1,6 +1,6 @@
 // Example for how a node module would import the sdk
 
-import { generateMnemonic, LibraWallet } from '../dist/index.ts';
+import { generateMnemonic, LibraWallet } from 'open-libra-sdk';
 
 const main = async () => {
   const mnem = generateMnemonic();

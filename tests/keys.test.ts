@@ -10,7 +10,7 @@ import {
   generateMnemonic,
   publicKeyToAuthKey,
 } from "../src/crypto/keyFactory";
-import { ALICE_MNEM } from "./support/fixture_mnemonics";
+import { ALICE_MNEM } from "../src/local_testnet/fixture_mnemonics";
 
 test("keygen mnemonic", async () => {
   const mnem = generateMnemonic();

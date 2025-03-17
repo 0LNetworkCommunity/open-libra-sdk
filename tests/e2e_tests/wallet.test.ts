@@ -3,12 +3,12 @@ import {
   mnemonicToAccountObj,
   publicKeyToAuthKey,
 } from "../../src/crypto/keyFactory";
-import { ALICE_MNEM } from "../support/fixture_mnemonics";
+import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
 import { LibraWallet } from "../../src/wallet/libraWallet";
 import { Libra } from "../../src/api/vendorClient";
 import { Network } from "@aptos-labs/ts-sdk";
 import { DOCKER_URL } from "../../src";
-import { testnetDown, testnetUp } from "../support/compose";
+import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 
 beforeEach(async () => {
   console.log("testnet setup");
