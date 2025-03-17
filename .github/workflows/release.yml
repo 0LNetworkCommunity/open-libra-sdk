@@ -21,7 +21,7 @@ jobs:
         run: bun release
 
       - name: pack works
-        run: bun pack
+        run: npm pack
 
       - name: check release builds
         run: bash test_releases.sh
