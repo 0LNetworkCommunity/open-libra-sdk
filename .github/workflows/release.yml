@@ -20,5 +20,8 @@ jobs:
       - name: release
         run: bun release
 
+      - name: pack works
+        run: bun pack
+
       - name: check release builds
         run: bash test_releases.sh
