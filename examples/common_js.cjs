@@ -1,6 +1,6 @@
 // Example for how common js would import the sdk
 
-const libraSDK = require('../dist/index.cjs');
+const libraSDK = require('open-libra-sdk');
 
 const main = async () => {
   const mnem = libraSDK.generateMnemonic();
