@@ -1,4 +1,4 @@
-import type { ViewArgs } from "./types";
+import type { ViewArgs } from "../types/clientPayloads";
 
 export const currentValidatorsPayload: ViewArgs = {
   payload: { function: "0x1::stake::get_current_validators" },

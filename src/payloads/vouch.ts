@@ -1,4 +1,4 @@
-import type { ViewArgs } from "./types";
+import type { ViewArgs } from "../types/clientPayloads";
 
 export const allVouchersPayload = (address: string): ViewArgs => ({
   payload: {

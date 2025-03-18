@@ -1,4 +1,4 @@
-import type { ViewArgs } from "./types";
+import type { ViewArgs } from "../types/clientPayloads";
 
 export const feesCollectedPayload: ViewArgs = {
   payload: {function: "0x1::transaction_fee::system_fees_collected"},

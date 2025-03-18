@@ -28,8 +28,8 @@ test("can get chain id", async () => {
 
 test("can get validators", async () => {
   console.log("Calling Libra Explorer API");
-  const client = new LibraClientV2();
-  const vals = await client.general.view(currentValidatorsPayload);
+  const client = new LibraClientV2(Network.TESTNET, DOCKER_URL);
+  const vals = await client.general.viewJson(currentValidatorsPayload);
   console.log(vals);
 
 });

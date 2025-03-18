@@ -14,9 +14,12 @@ const main = async () => {
   let client = new libraSDK.LibraClientV2(libraSDK.Network.MAINNET);
   console.log(`Client created for: ${client.config.network}`);
 
-  // get the ledger info
-  // const ledgerInfo = await client.getLedgerInfo();
-  // console.log(ledgerInfo);
+  // call a view function with a helper object that contains the
+  // payload for querying the current validators
+
+  // let vals = await client.general.viewJson(libraSDK.currentValidatorsPayload);
+  // console.log(vals);
+
 }
 
 main()
