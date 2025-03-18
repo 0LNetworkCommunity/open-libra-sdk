@@ -23,7 +23,6 @@ test("can get chain id", async () => {
   const chain_id = await client.general.getChainId();
 
   expect(chain_id).toBe(2);
-
 });
 
 test("can get validators", async () => {
@@ -31,7 +30,6 @@ test("can get validators", async () => {
   const client = new LibraClient(Network.TESTNET, DOCKER_URL);
   const vals = await client.general.viewJson(currentValidatorsPayload);
   console.log(vals);
-
 });
 
 // test("can get balance", async () => {

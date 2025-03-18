@@ -1,4 +1,7 @@
-import type { InputViewFunctionData, InputViewFunctionJsonData, LedgerVersionArg } from "@aptos-labs/ts-sdk";
+import type {
+  InputViewFunctionJsonData,
+  LedgerVersionArg,
+} from "@aptos-labs/ts-sdk";
 
 // wrapper for the client.view() view function caller
 export interface ViewArgs {

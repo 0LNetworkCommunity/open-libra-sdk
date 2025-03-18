@@ -11,7 +11,7 @@ export const eligibleValidatorsPayload: ViewArgs = {
 export const validatorBidPayload = (address: string): ViewArgs => ({
   payload: {
     function: "0x1::proof_of_fee::current_bid",
-    functionArguments: [address]
+    functionArguments: [address],
   },
 });
 
@@ -20,7 +20,7 @@ export const validatorBidPayload = (address: string): ViewArgs => ({
 export const validatorGradePayload = (address: string): ViewArgs => ({
   payload: {
     function: "0x1::grade::get_validator_grade",
-    functionArguments: [address]
+    functionArguments: [address],
   },
 });
 
@@ -28,16 +28,16 @@ export const getPoFBidders = (filter_unqualified: boolean): ViewArgs => {
   return {
     payload: {
       function: "0x1::proof_of_fee::get_bidders_and_bids",
-      functionArguments: [filter_unqualified]
+      functionArguments: [filter_unqualified],
     },
-  }
+  };
 };
 
 export const getPoFErrors = (address: string): ViewArgs => {
   return {
     payload: {
       function: "0x1::proof_of_fee::audit_qualification",
-      functionArguments: [address]
+      functionArguments: [address],
     },
-  }
+  };
 };

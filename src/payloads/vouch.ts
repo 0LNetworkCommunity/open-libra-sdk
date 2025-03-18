@@ -3,7 +3,7 @@ import type { ViewArgs } from "../types/clientPayloads";
 export const allVouchersPayload = (address: string): ViewArgs => ({
   payload: {
     function: "0x1::vouch::all_vouchers",
-    functionArguments: [address]
+    functionArguments: [address],
   },
 });
 
@@ -11,7 +11,7 @@ export const allVouchersPayload = (address: string): ViewArgs => ({
 export const vouchesGiven = (address: string): ViewArgs => ({
   payload: {
     function: "0x1::vouch::get_given_vouches",
-    functionArguments: [address]
+    functionArguments: [address],
   },
 });
 
@@ -19,7 +19,7 @@ export const vouchesGiven = (address: string): ViewArgs => ({
 export const vouchesReceived = (address: string): ViewArgs => ({
   payload: {
     function: "0x1::vouch::get_received_vouches",
-    functionArguments: [address]
+    functionArguments: [address],
   },
 });
 
@@ -27,7 +27,7 @@ export const vouchesReceived = (address: string): ViewArgs => ({
 export const vouchesReceivedNotExpired = (address: string): ViewArgs => ({
   payload: {
     function: "0x1::vouch::all_not_expired",
-    functionArguments: [address]
+    functionArguments: [address],
   },
 });
 
@@ -35,6 +35,6 @@ export const vouchesReceivedNotExpired = (address: string): ViewArgs => ({
 export const vouchesReceivedValidNotFamily = (address: string): ViewArgs => ({
   payload: {
     function: "0x1::vouch::true_friends",
-    functionArguments: [address]
+    functionArguments: [address],
   },
 });

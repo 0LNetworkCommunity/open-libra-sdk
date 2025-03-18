@@ -34,7 +34,11 @@ test("can get originating address", async () => {
 });
 
 test("can recover address", async () => {
-  const wallet = LibraWallet.fromMnemonic(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
+  const wallet = LibraWallet.fromMnemonic(
+    ALICE_MNEM,
+    Network.TESTNET,
+    DOCKER_URL,
+  );
   await wallet.syncOnchain();
   const addr = wallet.getAddress();
   expect(addr.toString()).toBe(

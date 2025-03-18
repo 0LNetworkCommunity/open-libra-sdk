@@ -123,7 +123,11 @@ test(
 test(
   "can transfer",
   async () => {
-    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
+    const wallet = LibraWallet.fromMnemonic(
+      ALICE_MNEM,
+      Network.TESTNET,
+      DOCKER_URL,
+    );
     await wallet.syncOnchain();
 
     const addr_formatted = addressFromString(
@@ -143,7 +147,11 @@ test(
 test(
   "can transfer multiple sequence numbers",
   async () => {
-    const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
+    const wallet = LibraWallet.fromMnemonic(
+      ALICE_MNEM,
+      Network.TESTNET,
+      DOCKER_URL,
+    );
     await wallet.syncOnchain();
 
     const addr_formatted = addressFromString(
@@ -210,7 +218,11 @@ test("can sign noop tx", async () => {
 
 test("cold wallet workflow", async () => {
   // Prepare transaction in online environment
-  const libra = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
+  const libra = LibraWallet.fromMnemonic(
+    ALICE_MNEM,
+    Network.TESTNET,
+    DOCKER_URL,
+  );
 
   const marlon_addr = addressFromString("0x37799DA327DB4C58D5E28E7DD6338F6B");
 

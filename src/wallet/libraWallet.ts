@@ -64,7 +64,8 @@ export class LibraWallet {
     forceAddress?: AccountAddress,
   ): LibraWallet {
     const account = mnemonicToAccountObj(mnemonic, forceAddress);
-    const client = network && fullnode ? new LibraClient(network, fullnode) : undefined;
+    const client =
+      network && fullnode ? new LibraClient(network, fullnode) : undefined;
     return new LibraWallet(account, client);
   }
 
