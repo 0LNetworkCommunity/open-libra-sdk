@@ -5,7 +5,7 @@ import {
   mnemonicToAccountObj,
   publicKeyToAuthKey,
 } from "../../src/crypto/keyFactory";
-import { Libra } from "../../src/api/vendorClient";
+import { LibraClientV2 } from "../../src/client/client";
 import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
 import {
   generateSigningMessageForTransactionDiem,
@@ -36,7 +36,7 @@ afterEach(async () => {
 });
 
 test("can sign noop tx", async () => {
-  const libra = new Libra(Network.TESTNET, DOCKER_URL);
+  const libra = new LibraClientV2(Network.TESTNET, DOCKER_URL);
 
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);
@@ -72,7 +72,7 @@ test("can sign noop tx", async () => {
 test(
   "can submit noop tx",
   async () => {
-    const libra = new Libra(Network.TESTNET, DOCKER_URL);
+    const libra = new LibraClientV2(Network.TESTNET, DOCKER_URL);
 
     const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
     const authKey = publicKeyToAuthKey(alice_obj.publicKey);
@@ -175,7 +175,7 @@ test(
 );
 
 test("can sign noop tx", async () => {
-  const libra = new Libra(Network.TESTNET, DOCKER_URL);
+  const libra = new LibraClientV2(Network.TESTNET, DOCKER_URL);
 
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);

@@ -11,10 +11,11 @@ const main = async () => {
   let coldWallet = new libraSDK.LibraWallet(mnem);
   console.log(coldWallet.getAddress().toStringLong())
 
-  // optionally connect instantiate a wallet with a client for mainnet
-  // const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.MAINNET_URL);
+  let client = new libraSDK.LibraClientV2(libraSDK.Network.MAINNET);
+  console.log(`Client created for: ${client.config.network}`);
 
-  // const ledgerInfo = await mainnetWallet.client.getLedgerInfo();
+  // get the ledger info
+  // const ledgerInfo = await client.getLedgerInfo();
   // console.log(ledgerInfo);
 }
 

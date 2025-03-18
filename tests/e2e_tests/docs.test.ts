@@ -8,7 +8,7 @@ import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 import { addressFromString } from "../../src/crypto/keyFactory";
 import { Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
-import { Libra } from "../../src/api/vendorClient";
+import { LibraClientV2 } from "../../src/client/client";
 import { MAINNET_URL } from "../../src";
 beforeEach(async () => {
   console.log("testnet setup");
@@ -67,8 +67,7 @@ test(
 test(
   "get resources instructions work",
   async () => {
-    // import { Libra } from 'open-libra-sdk'
-    const libra = new Libra(Network.TESTNET, "http://localhost:8280/v1");
+    const libra = new LibraClientV2(Network.TESTNET, "http://localhost:8280/v1");
 
     interface Coin {
       coin: {

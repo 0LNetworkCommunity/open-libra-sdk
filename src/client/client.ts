@@ -11,13 +11,17 @@ import {
   type InputViewFunctionJsonData,
   type MoveValue,
 } from "@aptos-labs/ts-sdk";
-import { MAINNET_URL } from "./api";
 import { addressFromString } from "../crypto/keyFactory";
 import { submitTransactionDiem } from "../transaction/submit";
 
+export const MAINNET_URL: string = "https://rpc.scan.openlibra.world/v1";
+export const TESTNET_URL: string = "http://testnet.openlibra.io:8080/v1";
+// local e2e tests connection, libra-alice in local testnet
+export const DOCKER_URL: string = "http://localhost:8280/v1";
+
 // @params account can be string
 // @params struct_id can be a string in format x::y::z
-export class Libra extends Aptos {
+export class LibraClientV2 extends Aptos {
   constructor(network?: Network, fullnode?: string) {
     // 0. Setup the client and test accounts
     const config = new AptosConfig({

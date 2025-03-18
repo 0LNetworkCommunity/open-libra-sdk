@@ -14,7 +14,7 @@ import type {
 import { mnemonicToAccountObj, newAccount } from "../crypto/keyFactory";
 import { signTransactionWithAuthenticatorDiem } from "../transaction/txSigning";
 
-import { Libra } from "../api/vendorClient";
+import { LibraClientV2 } from "../client/client";
 
 /**
  * CryptoWallet class provides functionalities for handling a cryptocurrency wallet.
@@ -29,7 +29,7 @@ export class LibraWallet {
    */
   readonly account: Ed25519Account;
   onchainAddress?: AccountAddress;
-  readonly client?: Libra;
+  readonly client?: LibraClientV2;
 
   /**
    * Transaction options that can be modified based on user preferences.
@@ -69,7 +69,7 @@ export class LibraWallet {
     // if this is a connected wallet
     // leave blank for offline tx signing, cold wallet purposes
     if (network && fullnode) {
-      this.client = new Libra(network, fullnode);
+      this.client = new LibraClientV2(network, fullnode);
     }
   }
 
@@ -132,7 +132,7 @@ export class LibraWallet {
   /**
    * Simple transfer function between ordinary accounts
    * @param recipient address of recipient
-   * @param amount non-decimal coin amount for transfer. Libra uses 6 decimal places. e.g. 1 coin = 1,000,000 amount
+   * @param amount non-decimal coin amount for transfer. Open Libra uses 6 decimal places. e.g. 1 coin = 1,000,000 amount
    */
   async buildTransferTx(
     recipient: AccountAddress,
