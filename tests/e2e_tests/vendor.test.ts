@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test } from "bun:test";
-import { Libra } from "../../src/api/vendorClient";
+import { LibraClient } from "../../src/client/client";
 import { Network } from "@aptos-labs/ts-sdk";
 import { DOCKER_URL } from "../../src";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
@@ -18,7 +18,7 @@ afterEach(async () => {
 });
 
 test("use vendor client", async () => {
-  const libra = new Libra(Network.TESTNET, DOCKER_URL);
+  const libra = new LibraClient(Network.TESTNET, DOCKER_URL);
   const ledgerInfo = await libra.getLedgerInfo();
   expect(ledgerInfo.chain_id).toBeGreaterThan(0);
 });
@@ -29,7 +29,7 @@ test("can get resource", async () => {
       value: number;
     };
   }
-  const libra = new Libra(Network.TESTNET, DOCKER_URL);
+  const libra = new LibraClient(Network.TESTNET, DOCKER_URL);
 
   const res = await libra.getResource<Coin>(
     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",

@@ -8,14 +8,18 @@ const main = async () => {
 
   console.log(mnem, "\n");
 
-  let coldWallet = new libraSDK.LibraWallet(mnem);
+  let coldWallet = libraSDK.LibraWallet.fromMnemonic(mnem);
   console.log(coldWallet.getAddress().toStringLong())
 
-  // optionally connect instantiate a wallet with a client for mainnet
-  // const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.MAINNET_URL);
+  let client = new libraSDK.LibraClient(libraSDK.Network.MAINNET);
+  console.log(`Client created for: ${client.config.network}`);
 
-  // const ledgerInfo = await mainnetWallet.client.getLedgerInfo();
-  // console.log(ledgerInfo);
+  // call a view function with a helper object that contains the
+  // payload for querying the current validators
+
+  // let vals = await client.general.viewJson(libraSDK.currentValidatorsPayload);
+  // console.log(vals);
+
 }
 
 main()

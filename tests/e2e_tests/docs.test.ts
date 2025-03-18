@@ -2,14 +2,17 @@
 // be copy-paste-proof. Write them here
 // and then copy them over to the instructions.
 
-import { afterEach, beforeEach, test } from "bun:test";
+import { afterEach, beforeEach, expect, test } from "bun:test";
 import { LibraWallet } from "../../src/wallet/libraWallet";
 import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 import { addressFromString } from "../../src/crypto/keyFactory";
-import { Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
-import { Libra } from "../../src/api/vendorClient";
+import { Ed25519Account, Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
+import { LibraClient } from "../../src/client/client";
 import { MAINNET_URL } from "../../src";
+
+const TESTNET_URL = "http://localhost:8280/v1";
+
 beforeEach(async () => {
   console.log("testnet setup");
   // make sure we teardown any zombies first
@@ -29,18 +32,16 @@ test(
   "quickstart instructions work",
   async () => {
     // Uses LibraWallet for common account operations
-    // import { LibraWallet, Network } from 'open-libra-sdk'
+    // import { LibraWallet, Network, addressFromString } from 'open-libra-sdk'
+
+    // const TESTNET_URL = "https://testnet.openlibra.io/v1";
     // const MNEM = "your mnemonic..."
 
     // For mainnet, just initialize with your mnemonic
-    // const wallet = new LibraWallet(MNEM);
+    // const wallet_mainnet = LibraWallet.fromMnemonic(MNEM);
 
     // optionally, connect to a local testnet, by adding vars
-    const wallet = new LibraWallet(
-      MNEM,
-      Network.TESTNET,
-      "http://localhost:8280/v1",
-    );
+    const wallet = LibraWallet.fromMnemonic(MNEM, Network.TESTNET, TESTNET_URL);
 
     // check your connection to the fullnode
     const ledgerInfo = await wallet.client?.getLedgerInfo();
@@ -64,11 +65,44 @@ test(
   { timeout: 40_000 },
 );
 
+test("create a client instructions work", async () => {
+  // import { LibraClient, Network,  } from 'open-libra-sdk'
+
+  // const TESTNET_URL = "https://testnet.openlibra.io/v1";
+
+  // for mainnet
+  // const client_mainnet = new LibraClient();
+  // local testnet
+  const client_testnet = new LibraClient(Network.TESTNET, TESTNET_URL);
+
+  const ledgerInfo = await client_testnet.getLedgerInfo();
+  console.log("block height:", ledgerInfo.block_height);
+
+  expect(ledgerInfo.block_height).toBeDefined();
+
+  // Advanced:
+  // You can reuse this client instance to create a LibraWallet instance for a user.
+  // First get the Ed25519Account type, in this case generated:
+  const edAccount = Ed25519Account.generate();
+  // then init a wallet
+  const wallet = LibraWallet.fromPrivateKey(
+    edAccount.accountAddress,
+    edAccount.privateKey,
+    client_testnet,
+  );
+  // now you can use the wallet to interact with the chain
+  const id = await wallet.client?.general.getChainId();
+  console.log("chain id:", id);
+  expect(id).toBeDefined();
+});
+
 test(
   "get resources instructions work",
   async () => {
-    // import { Libra } from 'open-libra-sdk'
-    const libra = new Libra(Network.TESTNET, "http://localhost:8280/v1");
+    // import { LibraClient, Network,  } from 'open-libra-sdk'
+
+    // const TESTNET_URL = "https://testnet.openlibra.io/v1";
+    const libra = new LibraClient(Network.TESTNET, TESTNET_URL);
 
     interface Coin {
       coin: {
@@ -96,28 +130,23 @@ test(
 
     // COLD WALLETS
     // simple case: cold wallet, where no key rotation happened
-    const coldWalletFromMnem = new LibraWallet(MNEM);
+    const coldWalletFromMnem = LibraWallet.fromMnemonic(MNEM);
     console.log("address:", coldWalletFromMnem.getAddress().toStringLong());
 
     // set specific private key and address: in case of key rotation
     const addressObj = addressFromString("0xDECAFC0FFEE");
+
     const pkey = new Ed25519PrivateKey(
       "0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b",
     );
-    const coldWalletWithKey = new LibraWallet(
-      undefined,
-      undefined,
-      undefined,
-      addressObj,
-      pkey,
-    );
+    const coldWalletWithKey = LibraWallet.fromPrivateKey(addressObj, pkey);
     console.log(
       "other address:",
       coldWalletWithKey.getAddress().toStringLong(),
     );
 
     // ONLINE WALLETS
-    const mainnetHotWallet = new LibraWallet(
+    const mainnetHotWallet = LibraWallet.fromMnemonic(
       MNEM,
       Network.MAINNET,
       MAINNET_URL,
@@ -125,10 +154,10 @@ test(
     console.log("fullnode url:", mainnetHotWallet.client?.config.fullnode);
 
     // Online wallet, using testnet
-    const testnetHotWallet = new LibraWallet(
+    const testnetHotWallet = LibraWallet.fromMnemonic(
       MNEM,
       Network.TESTNET,
-      "http://localhost:8280/v1",
+      TESTNET_URL,
     );
 
     // Get the latest account state.
@@ -149,10 +178,10 @@ test(
   "build transactions instructions work",
   async () => {
     // Online wallet, using local docker testnet
-    const testnetHotWallet = new LibraWallet(
+    const testnetHotWallet = LibraWallet.fromMnemonic(
       MNEM,
       Network.TESTNET,
-      "http://localhost:8280/v1",
+      TESTNET_URL,
     );
 
     // ... continued from above

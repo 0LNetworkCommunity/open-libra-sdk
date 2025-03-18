@@ -1,77 +1,43 @@
-import type { ViewObj } from "./types";
+import type { ViewArgs } from "../types/clientPayloads";
 
-export const currentValidatorsPayload: ViewObj = {
-  function: "0x1::stake::get_current_validators",
-  type_arguments: [],
-  arguments: [],
+export const currentValidatorsPayload: ViewArgs = {
+  payload: { function: "0x1::stake::get_current_validators" },
 };
 
-export const eligibleValidatorsPayload: ViewObj = {
-  function: "0x1::validator_universe::get_eligible_validators",
-  type_arguments: [],
-  arguments: [],
+export const eligibleValidatorsPayload: ViewArgs = {
+  payload: { function: "0x1::validator_universe::get_eligible_validators" },
 };
 
-export const validatorBidPayload = (address: string): ViewObj => ({
-  function: "0x1::proof_of_fee::current_bid",
-  type_arguments: [],
-  arguments: [address],
+export const validatorBidPayload = (address: string): ViewArgs => ({
+  payload: {
+    function: "0x1::proof_of_fee::current_bid",
+    functionArguments: [address],
+  },
 });
 
 // TODO: get expiration
 
-export const validatorGradePayload = (address: string): ViewObj => ({
-  function: "0x1::grade::get_validator_grade",
-  type_arguments: [],
-  arguments: [address],
+export const validatorGradePayload = (address: string): ViewArgs => ({
+  payload: {
+    function: "0x1::grade::get_validator_grade",
+    functionArguments: [address],
+  },
 });
 
-export const allVouchersPayload = (address: string): ViewObj => ({
-  function: "0x1::vouch::all_vouchers",
-  type_arguments: [],
-  arguments: [address],
-});
-
-// all vouches given out returns two arrays address[] expiration[]
-export const vouchesGiven = (address: string): ViewObj => ({
-  function: "0x1::vouch::get_given_vouches",
-  type_arguments: [],
-  arguments: [address],
-});
-
-// all vouches received, weather or not they are valid two arrays address[] expiration[]
-export const vouchesReceived = (address: string): ViewObj => ({
-  function: "0x1::vouch::get_received_vouches",
-  type_arguments: [],
-  arguments: [address],
-});
-
-// get all vouches received and filter out expired ones
-export const vouchesReceivedNotExpired = (address: string): ViewObj => ({
-  function: "0x1::vouch::all_not_expired",
-  type_arguments: [],
-  arguments: [address],
-});
-
-// removes expired vouches, and vouches from family members
-export const vouchesReceivedValidNotFamily = (address: string): ViewObj => ({
-  function: "0x1::vouch::true_friends",
-  type_arguments: [],
-  arguments: [address],
-});
-
-export const getPoFBidders = (filter_unqualified: boolean): ViewObj => {
+export const getPoFBidders = (filter_unqualified: boolean): ViewArgs => {
   return {
-    function: "0x1::proof_of_fee::get_bidders_and_bids",
-    type_arguments: [],
-    arguments: [filter_unqualified],
+    payload: {
+      function: "0x1::proof_of_fee::get_bidders_and_bids",
+      functionArguments: [filter_unqualified],
+    },
   };
 };
 
-export const getPoFErrors = (address: string): ViewObj => {
+export const getPoFErrors = (address: string): ViewArgs => {
   return {
-    function: "0x1::proof_of_fee::audit_qualification",
-    type_arguments: [],
-    arguments: [address],
+    payload: {
+      function: "0x1::proof_of_fee::audit_qualification",
+      functionArguments: [address],
+    },
   };
 };

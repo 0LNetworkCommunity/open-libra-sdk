@@ -14,7 +14,7 @@ import type {
 import { mnemonicToAccountObj, newAccount } from "../crypto/keyFactory";
 import { signTransactionWithAuthenticatorDiem } from "../transaction/txSigning";
 
-import { Libra } from "../api/vendorClient";
+import { LibraClient } from "../client/client";
 
 /**
  * CryptoWallet class provides functionalities for handling a cryptocurrency wallet.
@@ -29,48 +29,59 @@ export class LibraWallet {
    */
   readonly account: Ed25519Account;
   onchainAddress?: AccountAddress;
-  readonly client?: Libra;
+  readonly client?: LibraClient;
 
   /**
    * Transaction options that can be modified based on user preferences.
    */
   txOptions: InputGenerateTransactionOptions;
 
-  /**
-   * Constructs a CryptoWallet instance by generating an account from a mnemonic phrase.
-   * @param mnemonic - The mnemonic phrase used to generate the account.
-   * @param network - settings for MAINNET, TESTNET etc
-   * @param fullnode - the URL of upstream node. Troubleshooting: `bun` will error on HTTPS connections
-   * @param forceAddress - cold wallets: if the key has rotated you'll need to know the account in advance (or look it up on chain)
-   * @param privateKey - instead of mnemonic, can pass a private key.
-
-   */
-  constructor(
-    mnemonic?: string,
-    network?: Network,
-    fullnode?: string,
-    forceAddress?: AccountAddress,
-    privateKey?: Ed25519PrivateKey,
+  private constructor(
+    account: Ed25519Account,
+    client?: LibraClient,
+    address?: AccountAddress,
   ) {
-    // easy mode: recover with mnemonic
-    if (mnemonic) {
-      this.account = mnemonicToAccountObj(mnemonic, forceAddress);
-    } else if (forceAddress && privateKey) {
-      this.account = newAccount(privateKey, forceAddress);
-    } else {
-      throw "ERROR: must provide recovery mnemonic, or account address and private key";
-    }
-
+    this.account = account;
+    this.client = client;
+    this.onchainAddress = address;
     this.txOptions = {
       maxGasAmount: 40000,
       gasUnitPrice: 100,
-    }; // Default options can be changed after init
+    };
+  }
 
-    // if this is a connected wallet
-    // leave blank for offline tx signing, cold wallet purposes
-    if (network && fullnode) {
-      this.client = new Libra(network, fullnode);
-    }
+  /**
+   * Creates a wallet instance from a mnemonic phrase
+   * @param mnemonic The mnemonic phrase used to generate the account
+   * @param network Optional network settings (MAINNET, TESTNET etc)
+   * @param fullnode Optional URL of upstream node
+   * @param forceAddress Optional account address if key has rotated
+   */
+  static fromMnemonic(
+    mnemonic: string,
+    network?: Network,
+    fullnode?: string,
+    forceAddress?: AccountAddress,
+  ): LibraWallet {
+    const account = mnemonicToAccountObj(mnemonic, forceAddress);
+    const client =
+      network && fullnode ? new LibraClient(network, fullnode) : undefined;
+    return new LibraWallet(account, client);
+  }
+
+  /**
+   * Creates a wallet instance from an existing account address and private key
+   * @param address The account address
+   * @param privateKey The Ed25519 private key
+   * @param client Pre-configured LibraClient instance
+   */
+  static fromPrivateKey(
+    address: AccountAddress,
+    privateKey: Ed25519PrivateKey,
+    client?: LibraClient,
+  ): LibraWallet {
+    const account = newAccount(privateKey, address);
+    return new LibraWallet(account, client, address);
   }
 
   /**
@@ -132,7 +143,7 @@ export class LibraWallet {
   /**
    * Simple transfer function between ordinary accounts
    * @param recipient address of recipient
-   * @param amount non-decimal coin amount for transfer. Libra uses 6 decimal places. e.g. 1 coin = 1,000,000 amount
+   * @param amount non-decimal coin amount for transfer. Open Libra uses 6 decimal places. e.g. 1 coin = 1,000,000 amount
    */
   async buildTransferTx(
     recipient: AccountAddress,
