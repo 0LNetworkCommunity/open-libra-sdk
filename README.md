@@ -69,8 +69,11 @@ You may not need to instantiate a wallet to check the chain status. Below you ca
   const edAccount = Ed25519Account.generate()
   // then init a wallet
   const wallet = LibraWallet.fromPrivateKey(edAccount.accountAddress, edAccount.privateKey, client_testnet);
+
   // now you can use the wallet to interact with the chain
-  await wallet.syncOnchain();
+
+  const id = await wallet.client?.general.getChainId();
+  console.log(id);
 ```
 
 #### Fetch Some Data
@@ -204,6 +207,8 @@ Look in the `./examples` folder for commonjs, Node, and typescript imports of th
 In a common JS file you can import the sdk to manage wallets
 and query the chain. See the minimal example:
 ```
+// Example for how common js would import the sdk
+
 const libraSDK = require('open-libra-sdk');
 
 const main = async () => {
@@ -213,12 +218,17 @@ const main = async () => {
   console.log(mnem, "\n");
 
   let coldWallet = libraSDK.LibraWallet.fromMnemonic(mnem);
-  console.log(coldWallet.get_address().toStringLong())
+  console.log(coldWallet.getAddress().toStringLong())
 
-  const mainnetWallet = new libraSDK.LibraWallet(mnem, "mainnet", libraSDK.MAINNET_URL);
+  let client = new libraSDK.LibraClient(libraSDK.Network.MAINNET);
+  console.log(`Client created for: ${client.config.network}`);
 
-  const ledgerInfo = await mainnetWallet.client.getLedgerInfo();
-  console.log(ledgerInfo);
+  // call a view function with a helper object that contains the
+  // payload for querying the current validators
+
+  // let vals = await client.general.viewJson(libraSDK.currentValidatorsPayload);
+  // console.log(vals);
+
 }
 
 main()

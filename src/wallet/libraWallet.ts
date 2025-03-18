@@ -73,7 +73,7 @@ export class LibraWallet {
    * Creates a wallet instance from an existing account address and private key
    * @param address The account address
    * @param privateKey The Ed25519 private key
-   * @param client Pre-configured LibraClientV2 instance
+   * @param client Pre-configured LibraClient instance
    */
   static fromPrivateKey(
     address: AccountAddress,

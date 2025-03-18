@@ -8,10 +8,10 @@ const main = async () => {
 
   console.log(mnem, "\n");
 
-  let coldWallet = new libraSDK.LibraWallet(mnem);
+  let coldWallet = libraSDK.LibraWallet.fromMnemonic(mnem);
   console.log(coldWallet.getAddress().toStringLong())
 
-  let client = new libraSDK.LibraClientV2(libraSDK.Network.MAINNET);
+  let client = new libraSDK.LibraClient(libraSDK.Network.MAINNET);
   console.log(`Client created for: ${client.config.network}`);
 
   // call a view function with a helper object that contains the
