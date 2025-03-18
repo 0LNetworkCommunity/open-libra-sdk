@@ -1,6 +1,6 @@
 {
   "name": "open-libra-sdk",
-  "version": "1.0.5-beta.0",
+  "version": "1.0.5-beta.1",
   "description": "A minimalist Typescript library for interacting with the Open Libra blockchain.",
   "homepage": "https://github.com/0LNetworkCommunity/open-libra-sdk#readme",
   "bugs": {

@@ -92,7 +92,7 @@ test("create a client instructions work", async () => {
   );
   // now you can use the wallet to interact with the chain
   const id = await wallet.client?.general.getChainId();
-  console.log(id);
+  console.log("chain id:", id);
   expect(id).toBeDefined();
 });
 

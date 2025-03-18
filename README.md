@@ -73,7 +73,7 @@ You may not need to instantiate a wallet to check the chain status. Below you ca
   // now you can use the wallet to interact with the chain
 
   const id = await wallet.client?.general.getChainId();
-  console.log(id);
+  console.log("chain id:", id);
 ```
 
 #### Fetch Some Data
