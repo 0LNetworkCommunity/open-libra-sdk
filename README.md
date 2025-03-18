@@ -14,10 +14,10 @@ npm install open-libra-sdk
   const MNEM = "your mnemonic..."
 
   // For mainnet, just initialize with your mnemonic
-  const wallet = new LibraWallet(MNEM);
+  const wallet = LibraWallet.fromMnemonic(MNEM);
 
   // optionally, connect to a local testnet, by adding vars
-  // const wallet = new LibraWallet(MNEM, Network.TESTNET, 'http://localhost:8280/v1');
+  // const wallet = LibraWallet.fromMnemonic(MNEM, Network.TESTNET, 'http://localhost:8280/v1');
 
   // check your connection to the fullnode
   const ledgerInfo = await wallet.client?.getLedgerInfo();
@@ -47,13 +47,20 @@ npm install open-libra-sdk
 You may not need to instantiate a wallet to check the chain status. Below you can check you can connect to a fullnode, and get the API index with latest block info
 
 ```
-  import { Libra, Network } from 'open-libra-sdk'
+  import { LibraClient, Network } from 'open-libra-sdk'
   // for mainnet
-  const libra = new Libra();
+  const libra = new LibraClient();
   // local testnet
-  const libra = new Libra(Network.TESTNET, 'http://localhost:8480/v1');
+  const libra = new LibraClient(Network.TESTNET, 'http://localhost:8480/v1');
 
   const ledgerInfo = await libra.getLedgerInfo();
+
+  // Advanced:
+  // You can reuse this client instance to create a LibraWallet instance for a user.
+  // First get the Ed25519Account type, in this case generated:
+  // const edAccount = Ed25519Account.generate()
+  // then init a wallet
+  // const wallet = new LibraWallet(edAccount, client);
 ```
 
 #### Fetch Some Data

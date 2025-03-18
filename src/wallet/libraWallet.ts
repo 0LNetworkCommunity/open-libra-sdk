@@ -36,41 +36,51 @@ export class LibraWallet {
    */
   txOptions: InputGenerateTransactionOptions;
 
-  /**
-   * Constructs a CryptoWallet instance by generating an account from a mnemonic phrase.
-   * @param mnemonic - The mnemonic phrase used to generate the account.
-   * @param network - settings for MAINNET, TESTNET etc
-   * @param fullnode - the URL of upstream node. Troubleshooting: `bun` will error on HTTPS connections
-   * @param forceAddress - cold wallets: if the key has rotated you'll need to know the account in advance (or look it up on chain)
-   * @param privateKey - instead of mnemonic, can pass a private key.
-
-   */
-  constructor(
-    mnemonic?: string,
-    network?: Network,
-    fullnode?: string,
-    forceAddress?: AccountAddress,
-    privateKey?: Ed25519PrivateKey,
+  private constructor(
+    account: Ed25519Account,
+    client?: LibraClientV2,
+    address?: AccountAddress,
   ) {
-    // easy mode: recover with mnemonic
-    if (mnemonic) {
-      this.account = mnemonicToAccountObj(mnemonic, forceAddress);
-    } else if (forceAddress && privateKey) {
-      this.account = newAccount(privateKey, forceAddress);
-    } else {
-      throw "ERROR: must provide recovery mnemonic, or account address and private key";
-    }
-
+    this.account = account;
+    this.client = client;
+    this.onchainAddress = address;
     this.txOptions = {
       maxGasAmount: 40000,
       gasUnitPrice: 100,
-    }; // Default options can be changed after init
+    };
+  }
 
-    // if this is a connected wallet
-    // leave blank for offline tx signing, cold wallet purposes
-    if (network && fullnode) {
-      this.client = new LibraClientV2(network, fullnode);
-    }
+  /**
+   * Creates a wallet instance from a mnemonic phrase
+   * @param mnemonic The mnemonic phrase used to generate the account
+   * @param network Optional network settings (MAINNET, TESTNET etc)
+   * @param fullnode Optional URL of upstream node
+   * @param forceAddress Optional account address if key has rotated
+   */
+  static fromMnemonic(
+    mnemonic: string,
+    network?: Network,
+    fullnode?: string,
+    forceAddress?: AccountAddress,
+  ): LibraWallet {
+    const account = mnemonicToAccountObj(mnemonic, forceAddress);
+    const client = network && fullnode ? new LibraClientV2(network, fullnode) : undefined;
+    return new LibraWallet(account, client);
+  }
+
+  /**
+   * Creates a wallet instance from an existing account address and private key
+   * @param address The account address
+   * @param privateKey The Ed25519 private key
+   * @param client Pre-configured LibraClientV2 instance
+   */
+  static fromPrivateKey(
+    address: AccountAddress,
+    privateKey: Ed25519PrivateKey,
+    client: LibraClientV2,
+  ): LibraWallet {
+    const account = newAccount(privateKey, address);
+    return new LibraWallet(account, client, address);
   }
 
   /**

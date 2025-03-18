@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, test } from "bun:test";
+import { afterAll, beforeAll, expect, test } from "bun:test";
 import {
   mnemonicToAccountObj,
   publicKeyToAuthKey,
@@ -10,14 +10,14 @@ import { Network } from "@aptos-labs/ts-sdk";
 import { DOCKER_URL } from "../../src";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 
-beforeEach(async () => {
+beforeAll(async () => {
   console.log("testnet setup");
   // make sure we teardown any zombies first
   await testnetDown();
   await testnetUp();
 });
 
-afterEach(async () => {
+afterAll(async () => {
   await testnetDown().then(() => {
     console.log("testnet down");
   });
@@ -34,7 +34,7 @@ test("can get originating address", async () => {
 });
 
 test("can recover address", async () => {
-  const wallet = new LibraWallet(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
+  const wallet = LibraWallet.fromMnemonic(ALICE_MNEM, Network.TESTNET, DOCKER_URL);
   await wallet.syncOnchain();
   const addr = wallet.getAddress();
   expect(addr.toString()).toBe(
