@@ -69,8 +69,8 @@ You can define a Type, and the Libra.getResource will coerce the type in typescr
 
 ```
 
-  // import { Libra } from 'open-libra-sdk'
-  const libra = new Libra(Network.TESTNET, 'http://localhost:8280/v1');
+  // import { LibraClient } from 'open-libra-sdk'
+  const libra = new LibraClient(Network.TESTNET, 'http://localhost:8280/v1');
 
   interface Coin {
     coin: {
@@ -97,7 +97,7 @@ You can define a Type, and the Libra.getResource will coerce the type in typescr
 
     // COLD WALLETS
     // simple case: cold wallet, where no key rotation happened
-    const coldWalletFromMnem = new LibraWallet(MNEM);
+    const coldWalletFromMnem = LibraWallet.fromMnemonic(MNEM);
     console.log("address:", coldWalletFromMnem.getAddress().toStringLong());
 
     // set specific private key and address: in case of key rotation

@@ -8,7 +8,7 @@ import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 import { addressFromString } from "../../src/crypto/keyFactory";
 import { Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
-import { LibraClientV2 } from "../../src/client/client";
+import { LibraClient } from "../../src/client/client";
 import { MAINNET_URL } from "../../src";
 beforeEach(async () => {
   console.log("testnet setup");
@@ -29,18 +29,14 @@ test(
   "quickstart instructions work",
   async () => {
     // Uses LibraWallet for common account operations
-    // import { LibraWallet, Network } from 'open-libra-sdk'
+    // import { LibraWallet, Network, addressFromString } from 'open-libra-sdk'
     // const MNEM = "your mnemonic..."
 
     // For mainnet, just initialize with your mnemonic
-    // const wallet = new LibraWallet(MNEM);
+    const wallet_mainnet = LibraWallet.fromMnemonic(MNEM);
 
     // optionally, connect to a local testnet, by adding vars
-    const wallet = new LibraWallet(
-      MNEM,
-      Network.TESTNET,
-      "http://localhost:8280/v1",
-    );
+    const wallet = LibraWallet.fromMnemonic(MNEM, Network.TESTNET, 'http://localhost:8280/v1');
 
     // check your connection to the fullnode
     const ledgerInfo = await wallet.client?.getLedgerInfo();
@@ -50,7 +46,9 @@ test(
     await wallet.syncOnchain();
 
     // parse an address which you'd like to send a tx to
-    const addressObj = addressFromString("0xDECAFC0FFEE");
+    const addressObj = addressFromString(
+      "0xDECAFC0FFEE",
+    );
 
     // use the transfer helper function
     const tx = await wallet.buildTransferTx(addressObj, 100);
@@ -58,7 +56,7 @@ test(
     const res = await wallet.signSubmitWait(tx);
 
     if (res.success == false) {
-      throw "Tx fails";
+      throw "Tx fails"
     }
   },
   { timeout: 40_000 },
@@ -67,7 +65,7 @@ test(
 test(
   "get resources instructions work",
   async () => {
-    const libra = new LibraClientV2(Network.TESTNET, "http://localhost:8280/v1");
+    const libra = new LibraClient(Network.TESTNET, 'http://localhost:8280/v1');
 
     interface Coin {
       coin: {
@@ -81,7 +79,7 @@ test(
       "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
     );
     if (res.coin.value == 0) {
-      throw "no coin found";
+      throw "no coin found"
     }
   },
   { timeout: 40_000 },
@@ -95,7 +93,7 @@ test(
 
     // COLD WALLETS
     // simple case: cold wallet, where no key rotation happened
-    const coldWalletFromMnem = new LibraWallet(MNEM);
+    const coldWalletFromMnem = LibraWallet.fromMnemonic(MNEM);
     console.log("address:", coldWalletFromMnem.getAddress().toStringLong());
 
     // set specific private key and address: in case of key rotation
@@ -103,10 +101,7 @@ test(
     const pkey = new Ed25519PrivateKey(
       "0x74f18da2b80b1820b58116197b1c41f8a36e1b37a15c7fb434bb42dd7bdaa66b",
     );
-    const coldWalletWithKey = new LibraWallet(
-      undefined,
-      undefined,
-      undefined,
+    const coldWalletWithKey = LibraWallet.fromPrivateKey(
       addressObj,
       pkey,
     );
@@ -116,7 +111,7 @@ test(
     );
 
     // ONLINE WALLETS
-    const mainnetHotWallet = new LibraWallet(
+    const mainnetHotWallet = LibraWallet.fromMnemonic(
       MNEM,
       Network.MAINNET,
       MAINNET_URL,
@@ -124,7 +119,7 @@ test(
     console.log("fullnode url:", mainnetHotWallet.client?.config.fullnode);
 
     // Online wallet, using testnet
-    const testnetHotWallet = new LibraWallet(
+    const testnetHotWallet = LibraWallet.fromMnemonic(
       MNEM,
       Network.TESTNET,
       "http://localhost:8280/v1",
@@ -148,7 +143,7 @@ test(
   "build transactions instructions work",
   async () => {
     // Online wallet, using local docker testnet
-    const testnetHotWallet = new LibraWallet(
+    const testnetHotWallet = LibraWallet.fromMnemonic(
       MNEM,
       Network.TESTNET,
       "http://localhost:8280/v1",

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
-import { DOCKER_URL, LibraClientV2 } from "../../src/client/client";
+import { DOCKER_URL, LibraClient } from "../../src/client/client";
 import { Network } from "@aptos-labs/ts-sdk";
 import { currentValidatorsPayload } from "../../src/payloads/validators";
 
@@ -19,7 +19,7 @@ afterAll(async () => {
 
 test("can get chain id", async () => {
   console.log("Calling Libra Explorer API");
-  const client = new LibraClientV2(Network.TESTNET, DOCKER_URL);
+  const client = new LibraClient(Network.TESTNET, DOCKER_URL);
   const chain_id = await client.general.getChainId();
 
   expect(chain_id).toBe(2);
@@ -28,7 +28,7 @@ test("can get chain id", async () => {
 
 test("can get validators", async () => {
   console.log("Calling Libra Explorer API");
-  const client = new LibraClientV2(Network.TESTNET, DOCKER_URL);
+  const client = new LibraClient(Network.TESTNET, DOCKER_URL);
   const vals = await client.general.viewJson(currentValidatorsPayload);
   console.log(vals);
 

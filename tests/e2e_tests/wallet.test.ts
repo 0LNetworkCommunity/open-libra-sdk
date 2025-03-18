@@ -5,7 +5,7 @@ import {
 } from "../../src/crypto/keyFactory";
 import { ALICE_MNEM } from "../../src/local_testnet/fixture_mnemonics";
 import { LibraWallet } from "../../src/wallet/libraWallet";
-import { LibraClientV2 } from "../../src/client/client";
+import { LibraClient } from "../../src/client/client";
 import { Network } from "@aptos-labs/ts-sdk";
 import { DOCKER_URL } from "../../src";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
@@ -26,7 +26,7 @@ afterAll(async () => {
 test("can get originating address", async () => {
   const alice_obj = mnemonicToAccountObj(ALICE_MNEM);
   const authKey = publicKeyToAuthKey(alice_obj.publicKey);
-  const libra = new LibraClientV2(Network.TESTNET, DOCKER_URL);
+  const libra = new LibraClient(Network.TESTNET, DOCKER_URL);
   const addr = await libra.getOriginatingAddress(authKey);
   expect(addr.toString()).toBe(
     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",

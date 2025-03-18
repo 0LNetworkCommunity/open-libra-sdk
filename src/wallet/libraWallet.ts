@@ -14,7 +14,7 @@ import type {
 import { mnemonicToAccountObj, newAccount } from "../crypto/keyFactory";
 import { signTransactionWithAuthenticatorDiem } from "../transaction/txSigning";
 
-import { LibraClientV2 } from "../client/client";
+import { LibraClient } from "../client/client";
 
 /**
  * CryptoWallet class provides functionalities for handling a cryptocurrency wallet.
@@ -29,7 +29,7 @@ export class LibraWallet {
    */
   readonly account: Ed25519Account;
   onchainAddress?: AccountAddress;
-  readonly client?: LibraClientV2;
+  readonly client?: LibraClient;
 
   /**
    * Transaction options that can be modified based on user preferences.
@@ -38,7 +38,7 @@ export class LibraWallet {
 
   private constructor(
     account: Ed25519Account,
-    client?: LibraClientV2,
+    client?: LibraClient,
     address?: AccountAddress,
   ) {
     this.account = account;
@@ -64,7 +64,7 @@ export class LibraWallet {
     forceAddress?: AccountAddress,
   ): LibraWallet {
     const account = mnemonicToAccountObj(mnemonic, forceAddress);
-    const client = network && fullnode ? new LibraClientV2(network, fullnode) : undefined;
+    const client = network && fullnode ? new LibraClient(network, fullnode) : undefined;
     return new LibraWallet(account, client);
   }
 
@@ -77,7 +77,7 @@ export class LibraWallet {
   static fromPrivateKey(
     address: AccountAddress,
     privateKey: Ed25519PrivateKey,
-    client: LibraClientV2,
+    client?: LibraClient,
   ): LibraWallet {
     const account = newAccount(privateKey, address);
     return new LibraWallet(account, client, address);
