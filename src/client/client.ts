@@ -28,8 +28,8 @@ export class LibraClient extends Aptos {
       network: network ?? Network.MAINNET,
       fullnode: fullnode ?? MAINNET_URL,
       clientConfig: {
-        WITH_CREDENTIALS: false // will cause CORS sadness
-      }
+        WITH_CREDENTIALS: false, // will cause CORS sadness
+      },
     });
 
     super(config);
