@@ -194,8 +194,16 @@ export function generateSugar(
         .replace(/_([a-z])/g, (_, c) => c.toUpperCase())
         .replace(/^([a-z])/, (m) => m.toUpperCase());
     // Args signature
+    function mapMoveTypeToTsType(moveType: string): string {
+      const t = moveType.trim().toLowerCase();
+      if (t === 'u8' || t === 'u16' || t === 'u32' || t === 'u64' || t === 'u128' || t === 'u256') return 'number';
+      if (t === 'bool') return 'boolean';
+      if (t.startsWith('vector<u8>')) return 'string'; // treat bytes as string
+      if (t === 'address' || t.startsWith('vector<')) return 'string';
+      return 'any';
+    }
     const argList = fn.args
-      .map((a, i) => `${a.name || "arg" + i}: any`)
+      .map((a, i) => `${a.name || "arg" + i}: ${mapMoveTypeToTsType(a.type)}`)
       .join(", ");
     const argNames = fn.args.map((a, i) => a.name || "arg" + i).join(", ");
     // JSDoc
