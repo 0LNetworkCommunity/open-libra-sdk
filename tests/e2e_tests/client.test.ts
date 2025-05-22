@@ -2,7 +2,6 @@ import { afterAll, beforeAll, expect, test } from "bun:test";
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 import { DOCKER_URL, LibraClient } from "../../src/client/client";
 import { Network } from "@aptos-labs/ts-sdk";
-import { currentValidatorsPayload } from "../../src/payloads/validators";
 import * as LibraViews from "../../src/views/viewFunctionsSugar";
 
 beforeAll(async () => {
@@ -24,13 +23,6 @@ test("can get chain id", async () => {
   const chain_id = await client.general.getChainId();
 
   expect(chain_id).toBe(2);
-});
-
-test("can get validators", async () => {
-  console.log("Calling Libra Explorer API");
-  const client = new LibraClient(Network.TESTNET, DOCKER_URL);
-  const vals = await client.general.viewJson(currentValidatorsPayload);
-  console.log(vals);
 });
 
 test("can get validators using viewFunctionsSugar", async () => {
