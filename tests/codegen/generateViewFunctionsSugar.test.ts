@@ -62,7 +62,6 @@ test("generateSugar() writes a valid TypeScript file that compiles", () => {
     .replace(/\\/g, "/");
   const importPath = relImport.startsWith(".") ? relImport : "./" + relImport;
   // Generate the file
-  const { generateSugar } = require("../../src/codegen/parseViewFunctions");
   generateSugar(FIXTURES_DIR, outFile, importPath);
   // Check file exists
   expect(fs.existsSync(outFile)).toBe(true);

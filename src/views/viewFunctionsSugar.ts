@@ -89,7 +89,9 @@ export function account_getAuthenticationKey(addr: string): ViewArgs {
  * @param account_addr address
  * @returns ViewArgs
  */
-export function account_isSignerCapabilityOffered(account_addr: string): ViewArgs {
+export function account_isSignerCapabilityOffered(
+  account_addr: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::account::is_signer_capability_offered",
@@ -103,7 +105,9 @@ export function account_isSignerCapabilityOffered(account_addr: string): ViewArg
  * @param account_addr address
  * @returns ViewArgs
  */
-export function account_getSignerCapabilityOfferFor(account_addr: string): ViewArgs {
+export function account_getSignerCapabilityOfferFor(
+  account_addr: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::account::get_signer_capability_offer_for",
@@ -145,7 +149,10 @@ export function reconfiguration_getCurrentEpoch(): ViewArgs {
  * @param max_votes u64
  * @returns ViewArgs
  */
-export function turnoutTally_getThresholdFromTurnout(voters: number, max_votes: number): ViewArgs {
+export function turnoutTally_getThresholdFromTurnout(
+  voters: number,
+  max_votes: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::turnout_tally::get_threshold_from_turnout",
@@ -160,7 +167,10 @@ export function turnoutTally_getThresholdFromTurnout(voters: number, max_votes: 
  * @param idx u64
  * @returns ViewArgs
  */
-export function voteReceipt_getVoteReceipt(user_addr: string, idx: number): ViewArgs {
+export function voteReceipt_getVoteReceipt(
+  user_addr: string,
+  idx: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::vote_receipt::get_vote_receipt",
@@ -307,7 +317,10 @@ export function migrations_getLastMigrationsHistory(): ViewArgs {
  * @param user address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_checkIsDonor(dv_account: string, user: string): ViewArgs {
+export function donorVoiceGovernance_checkIsDonor(
+  dv_account: string,
+  user: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::check_is_donor",
@@ -322,7 +335,10 @@ export function donorVoiceGovernance_checkIsDonor(dv_account: string, user: stri
  * @param user address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getUserDonations(dv_account: string, user: string): ViewArgs {
+export function donorVoiceGovernance_getUserDonations(
+  dv_account: string,
+  user: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_user_donations",
@@ -336,7 +352,9 @@ export function donorVoiceGovernance_getUserDonations(dv_account: string, user: 
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getVetoBallots(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_getVetoBallots(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_veto_ballots",
@@ -351,7 +369,10 @@ export function donorVoiceGovernance_getVetoBallots(dv_account: string): ViewArg
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_txHasVetoPending(dv_account: string, tx_id: number): ViewArgs {
+export function donorVoiceGovernance_txHasVetoPending(
+  dv_account: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::tx_has_veto_pending",
@@ -366,7 +387,10 @@ export function donorVoiceGovernance_txHasVetoPending(dv_account: string, tx_id:
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getVetoDeadline(dv_account: string, tx_id: number): ViewArgs {
+export function donorVoiceGovernance_getVetoDeadline(
+  dv_account: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_veto_deadline",
@@ -381,7 +405,10 @@ export function donorVoiceGovernance_getVetoDeadline(dv_account: string, tx_id: 
  * @param ballot_id u64
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getVetoTally(dv_account: string, ballot_id: number): ViewArgs {
+export function donorVoiceGovernance_getVetoTally(
+  dv_account: string,
+  ballot_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_veto_tally",
@@ -395,7 +422,9 @@ export function donorVoiceGovernance_getVetoTally(dv_account: string, ballot_id:
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getReauthBallots(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_getReauthBallots(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_reauth_ballots",
@@ -409,7 +438,9 @@ export function donorVoiceGovernance_getReauthBallots(dv_account: string): ViewA
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getProposedReauthBallot(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_getProposedReauthBallot(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_proposed_reauth_ballot",
@@ -423,7 +454,9 @@ export function donorVoiceGovernance_getProposedReauthBallot(dv_account: string)
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_isReauthProposed(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_isReauthProposed(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::is_reauth_proposed",
@@ -438,7 +471,10 @@ export function donorVoiceGovernance_isReauthProposed(dv_account: string): ViewA
  * @param ballot_id u64
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getReauthTally(dv_account: string, ballot_id: number): ViewArgs {
+export function donorVoiceGovernance_getReauthTally(
+  dv_account: string,
+  ballot_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_reauth_tally",
@@ -452,7 +488,9 @@ export function donorVoiceGovernance_getReauthTally(dv_account: string, ballot_i
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getReauthExpiry(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_getReauthExpiry(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_reauth_expiry",
@@ -467,7 +505,10 @@ export function donorVoiceGovernance_getReauthExpiry(dv_account: string): ViewAr
  * @param ballot_id u64
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_reauthWouldPass(dv_account: string, ballot_id: number): ViewArgs {
+export function donorVoiceGovernance_reauthWouldPass(
+  dv_account: string,
+  ballot_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::reauth_would_pass",
@@ -481,7 +522,9 @@ export function donorVoiceGovernance_reauthWouldPass(dv_account: string, ballot_
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getLiquidationBallots(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_getLiquidationBallots(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_liquidation_ballots",
@@ -495,7 +538,9 @@ export function donorVoiceGovernance_getLiquidationBallots(dv_account: string): 
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_isLiquidationProposed(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_isLiquidationProposed(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::is_liquidation_proposed",
@@ -510,7 +555,10 @@ export function donorVoiceGovernance_isLiquidationProposed(dv_account: string): 
  * @param id u64
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getLiquidationTally(dv_account: string, id: number): ViewArgs {
+export function donorVoiceGovernance_getLiquidationTally(
+  dv_account: string,
+  id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_liquidation_tally",
@@ -524,7 +572,9 @@ export function donorVoiceGovernance_getLiquidationTally(dv_account: string, id:
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceGovernance_getLiquidationDeadline(dv_account: string): ViewArgs {
+export function donorVoiceGovernance_getLiquidationDeadline(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_governance::get_liquidation_deadline",
@@ -552,7 +602,10 @@ export function epochHelper_getCurrentEpoch(): ViewArgs {
  * @param address_of_beneficiary address
  * @returns ViewArgs
  */
-export function pledgeAccounts_getUserPledgeAmount(account: string, address_of_beneficiary: string): ViewArgs {
+export function pledgeAccounts_getUserPledgeAmount(
+  account: string,
+  address_of_beneficiary: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::pledge_accounts::get_user_pledge_amount",
@@ -566,7 +619,9 @@ export function pledgeAccounts_getUserPledgeAmount(account: string, address_of_b
  * @param bene address
  * @returns ViewArgs
  */
-export function pledgeAccounts_getAvailableToBeneficiary(bene: string): ViewArgs {
+export function pledgeAccounts_getAvailableToBeneficiary(
+  bene: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::pledge_accounts::get_available_to_beneficiary",
@@ -580,7 +635,9 @@ export function pledgeAccounts_getAvailableToBeneficiary(bene: string): ViewArgs
  * @param bene address
  * @returns ViewArgs
  */
-export function pledgeAccounts_getLifetimeToBeneficiary(bene: string): ViewArgs {
+export function pledgeAccounts_getLifetimeToBeneficiary(
+  bene: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::pledge_accounts::get_lifetime_to_beneficiary",
@@ -880,7 +937,10 @@ export function vouch_trueFriends(addr: string): ViewArgs {
  * @param recipient address
  * @returns ViewArgs
  */
-export function vouch_isValidVoucherFor(voucher: string, recipient: string): ViewArgs {
+export function vouch_isValidVoucherFor(
+  voucher: string,
+  recipient: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::vouch::is_valid_voucher_for",
@@ -936,7 +996,9 @@ export function rootOfTrust_isInitialized(registry: string): ViewArgs {
  * @param registry address
  * @returns ViewArgs
  */
-export function rootOfTrust_getCurrentRootsAtRegistry(registry: string): ViewArgs {
+export function rootOfTrust_getCurrentRootsAtRegistry(
+  registry: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::root_of_trust::get_current_roots_at_registry",
@@ -951,7 +1013,10 @@ export function rootOfTrust_getCurrentRootsAtRegistry(registry: string): ViewArg
  * @param account address
  * @returns ViewArgs
  */
-export function rootOfTrust_isRootAtRegistry(registry: string, account: string): ViewArgs {
+export function rootOfTrust_isRootAtRegistry(
+  registry: string,
+  account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::root_of_trust::is_root_at_registry",
@@ -1332,7 +1397,10 @@ export function supply_getStats(): ViewArgs {
  * @param num_signatures u64
  * @returns ViewArgs
  */
-export function communityWalletInit_checkProposedAuths(initial_authorities: string, num_signatures: number): ViewArgs {
+export function communityWalletInit_checkProposedAuths(
+  initial_authorities: string,
+  num_signatures: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::community_wallet_init::check_proposed_auths",
@@ -1360,7 +1428,9 @@ export function communityWalletInit_qualifies(addr: string): ViewArgs {
  * @param opt_in_list vector<address>
  * @returns ViewArgs
  */
-export function communityWalletInit_getQualifying(opt_in_list: string): ViewArgs {
+export function communityWalletInit_getQualifying(
+  opt_in_list: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::community_wallet_init::get_qualifying",
@@ -1374,7 +1444,9 @@ export function communityWalletInit_getQualifying(opt_in_list: string): ViewArgs
  * @param multisig_address address
  * @returns ViewArgs
  */
-export function communityWalletInit_getCommunityWalletAuthorities(multisig_address: string): ViewArgs {
+export function communityWalletInit_getCommunityWalletAuthorities(
+  multisig_address: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::community_wallet_init::get_community_wallet_authorities",
@@ -1503,7 +1575,10 @@ export function grade_getValidatorGrade(val: string): ViewArgs {
  * @param amount u64
  * @returns ViewArgs
  */
-export function communityWalletAdvance_canWithdrawAmount(dv_account: string, amount: number): ViewArgs {
+export function communityWalletAdvance_canWithdrawAmount(
+  dv_account: string,
+  amount: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::community_wallet_advance::can_withdraw_amount",
@@ -1517,7 +1592,9 @@ export function communityWalletAdvance_canWithdrawAmount(dv_account: string, amo
  * @param dv_account address
  * @returns ViewArgs
  */
-export function communityWalletAdvance_isDelinquent(dv_account: string): ViewArgs {
+export function communityWalletAdvance_isDelinquent(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::community_wallet_advance::is_delinquent",
@@ -1531,7 +1608,9 @@ export function communityWalletAdvance_isDelinquent(dv_account: string): ViewArg
  * @param account address
  * @returns ViewArgs
  */
-export function communityWalletAdvance_totalOutstandingBalance(account: string): ViewArgs {
+export function communityWalletAdvance_totalOutstandingBalance(
+  account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::community_wallet_advance::total_outstanding_balance",
@@ -1545,7 +1624,9 @@ export function communityWalletAdvance_totalOutstandingBalance(account: string):
  * @param dv_account address
  * @returns ViewArgs
  */
-export function communityWalletAdvance_totalCreditAvailable(dv_account: string): ViewArgs {
+export function communityWalletAdvance_totalCreditAvailable(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::community_wallet_advance::total_credit_available",
@@ -1654,7 +1735,9 @@ export function donorVoice_getLiquidationQueue(): ViewArgs {
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceReauth_authorizationExpired(dv_account: string): ViewArgs {
+export function donorVoiceReauth_authorizationExpired(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_reauth::authorization_expired",
@@ -1668,7 +1751,9 @@ export function donorVoiceReauth_authorizationExpired(dv_account: string): ViewA
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceReauth_hasActivityInLastYear(dv_account: string): ViewArgs {
+export function donorVoiceReauth_hasActivityInLastYear(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_reauth::has_activity_in_last_year",
@@ -1682,7 +1767,9 @@ export function donorVoiceReauth_hasActivityInLastYear(dv_account: string): View
  * @param dv_account address
  * @returns ViewArgs
  */
-export function donorVoiceReauth_flaggedForReauthorization(dv_account: string): ViewArgs {
+export function donorVoiceReauth_flaggedForReauthorization(
+  dv_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_reauth::flagged_for_reauthorization",
@@ -1738,7 +1825,9 @@ export function cumulativeDeposits_getDepositors(payee: string): ViewArgs {
  * @param addr address
  * @returns ViewArgs
  */
-export function cumulativeDeposits_getCumulativeDeposits(addr: string): ViewArgs {
+export function cumulativeDeposits_getCumulativeDeposits(
+  addr: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::cumulative_deposits::get_cumulative_deposits",
@@ -1752,7 +1841,9 @@ export function cumulativeDeposits_getCumulativeDeposits(addr: string): ViewArgs
  * @param addr address
  * @returns ViewArgs
  */
-export function cumulativeDeposits_getIndexCumuDeposits(addr: string): ViewArgs {
+export function cumulativeDeposits_getIndexCumuDeposits(
+  addr: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::cumulative_deposits::get_index_cumu_deposits",
@@ -1822,7 +1913,9 @@ export function olAccount_scaleFromHuman(human: number): ViewArgs {
  * @param account address
  * @returns ViewArgs
  */
-export function olAccount_canReceiveDirectCoinTransfers(account: string): ViewArgs {
+export function olAccount_canReceiveDirectCoinTransfers(
+  account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::ol_account::can_receive_direct_coin_transfers",
@@ -1943,7 +2036,10 @@ export function donorVoiceTxs_isDonorVoice(multisig_address: string): ViewArgs {
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceTxs_getTxStatus(multisig_address: string, tx_id: number): ViewArgs {
+export function donorVoiceTxs_getTxStatus(
+  multisig_address: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::get_tx_status",
@@ -1958,7 +2054,10 @@ export function donorVoiceTxs_getTxStatus(multisig_address: string, tx_id: numbe
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceTxs_isVoting(donor_voice_address: string, tx_id: number): ViewArgs {
+export function donorVoiceTxs_isVoting(
+  donor_voice_address: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::is_voting",
@@ -1973,7 +2072,10 @@ export function donorVoiceTxs_isVoting(donor_voice_address: string, tx_id: numbe
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceTxs_isApproved(donor_voice_address: string, tx_id: number): ViewArgs {
+export function donorVoiceTxs_isApproved(
+  donor_voice_address: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::is_approved",
@@ -1988,7 +2090,10 @@ export function donorVoiceTxs_isApproved(donor_voice_address: string, tx_id: num
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceTxs_isRejected(donor_voice_address: string, tx_id: number): ViewArgs {
+export function donorVoiceTxs_isRejected(
+  donor_voice_address: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::is_rejected",
@@ -2003,7 +2108,10 @@ export function donorVoiceTxs_isRejected(donor_voice_address: string, tx_id: num
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceTxs_isScheduled(donor_voice_address: string, tx_id: number): ViewArgs {
+export function donorVoiceTxs_isScheduled(
+  donor_voice_address: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::is_scheduled",
@@ -2018,7 +2126,10 @@ export function donorVoiceTxs_isScheduled(donor_voice_address: string, tx_id: nu
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceTxs_isPaid(donor_voice_address: string, tx_id: number): ViewArgs {
+export function donorVoiceTxs_isPaid(
+  donor_voice_address: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::is_paid",
@@ -2033,7 +2144,10 @@ export function donorVoiceTxs_isPaid(donor_voice_address: string, tx_id: number)
  * @param tx_id u64
  * @returns ViewArgs
  */
-export function donorVoiceTxs_isVeto(directed_address: string, tx_id: number): ViewArgs {
+export function donorVoiceTxs_isVeto(
+  directed_address: string,
+  tx_id: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::is_veto",
@@ -2103,7 +2217,10 @@ export function donorVoiceTxs_getDvSupply(): ViewArgs {
  * @param status_enum u8
  * @returns ViewArgs
  */
-export function donorVoiceTxs_listByStatus(donor_voice_address: string, status_enum: number): ViewArgs {
+export function donorVoiceTxs_listByStatus(
+  donor_voice_address: string,
+  status_enum: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::donor_voice_txs::list_by_status",
@@ -2186,7 +2303,9 @@ export function proofOfFee_getBidders(remove_unqualified: boolean): ViewArgs {
  * @param remove_unqualified bool
  * @returns ViewArgs
  */
-export function proofOfFee_getBiddersAndBids(remove_unqualified: boolean): ViewArgs {
+export function proofOfFee_getBiddersAndBids(
+  remove_unqualified: boolean,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::proof_of_fee::get_bidders_and_bids",
@@ -2200,7 +2319,9 @@ export function proofOfFee_getBiddersAndBids(remove_unqualified: boolean): ViewA
  * @param incoming_addr address
  * @returns ViewArgs
  */
-export function proofOfFee_getValidVouchersInSet(incoming_addr: string): ViewArgs {
+export function proofOfFee_getValidVouchersInSet(
+  incoming_addr: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::proof_of_fee::get_valid_vouchers_in_set",
@@ -2214,7 +2335,9 @@ export function proofOfFee_getValidVouchersInSet(incoming_addr: string): ViewArg
  * @param set_size u64
  * @returns ViewArgs
  */
-export function proofOfFee_calculateMinVouchesRequired(set_size: number): ViewArgs {
+export function proofOfFee_calculateMinVouchesRequired(
+  set_size: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::proof_of_fee::calculate_min_vouches_required",
@@ -2352,7 +2475,9 @@ export function multiAction_existsOffer(multisig_address: string): ViewArgs {
  * @param multisig_address address
  * @returns ViewArgs
  */
-export function multiAction_getOfferProposed(multisig_address: string): ViewArgs {
+export function multiAction_getOfferProposed(
+  multisig_address: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multi_action::get_offer_proposed",
@@ -2366,7 +2491,9 @@ export function multiAction_getOfferProposed(multisig_address: string): ViewArgs
  * @param multisig_address address
  * @returns ViewArgs
  */
-export function multiAction_getOfferClaimed(multisig_address: string): ViewArgs {
+export function multiAction_getOfferClaimed(
+  multisig_address: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multi_action::get_offer_claimed",
@@ -2380,7 +2507,9 @@ export function multiAction_getOfferClaimed(multisig_address: string): ViewArgs 
  * @param multisig_address address
  * @returns ViewArgs
  */
-export function multiAction_getOfferProposedNOfM(multisig_address: string): ViewArgs {
+export function multiAction_getOfferProposedNOfM(
+  multisig_address: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multi_action::get_offer_proposed_n_of_m",
@@ -2409,7 +2538,10 @@ export function multiAction_getAuthorities(multisig_address: string): ViewArgs {
  * @param addr address
  * @returns ViewArgs
  */
-export function multiAction_isAuthority(multisig_addr: string, addr: string): ViewArgs {
+export function multiAction_isAuthority(
+  multisig_addr: string,
+  addr: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multi_action::is_authority",
@@ -2464,7 +2596,9 @@ export function reauthorization_isV8Authorized(account: string): ViewArgs {
  * @param account address
  * @returns ViewArgs
  */
-export function diemAccount_canReceiveDirectCoinTransfers(account: string): ViewArgs {
+export function diemAccount_canReceiveDirectCoinTransfers(
+  account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::diem_account::can_receive_direct_coin_transfers",
@@ -2478,7 +2612,9 @@ export function diemAccount_canReceiveDirectCoinTransfers(account: string): View
  * @param addr address
  * @returns ViewArgs
  */
-export function resourceAccountTestOnly_isResourceAccount(addr: string): ViewArgs {
+export function resourceAccountTestOnly_isResourceAccount(
+  addr: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::resource_account_test_only::is_resource_account",
@@ -2613,7 +2749,9 @@ export function stake_getValidatorIndex(validator_address: string): ViewArgs {
  * @param validator_index u64
  * @returns ViewArgs
  */
-export function stake_getCurrentEpochProposalCounts(validator_index: number): ViewArgs {
+export function stake_getCurrentEpochProposalCounts(
+  validator_index: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::stake::get_current_epoch_proposal_counts",
@@ -2696,7 +2834,10 @@ export function block_getCurrentBlockHeight(): ViewArgs {
  * @param idx u64
  * @returns ViewArgs
  */
-export function code_getModuleNamesForPackageIndex(addr: string, idx: number): ViewArgs {
+export function code_getModuleNamesForPackageIndex(
+  addr: string,
+  idx: number,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::code::get_module_names_for_package_index",
@@ -2777,7 +2918,9 @@ export function multisigAccount_metadata(multisig_account: string): ViewArgs {
  * @param multisig_account address
  * @returns ViewArgs
  */
-export function multisigAccount_numSignaturesRequired(multisig_account: string): ViewArgs {
+export function multisigAccount_numSignaturesRequired(
+  multisig_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multisig_account::num_signatures_required",
@@ -2805,7 +2948,9 @@ export function multisigAccount_owners(multisig_account: string): ViewArgs {
  * @param multisig_account address
  * @returns ViewArgs
  */
-export function multisigAccount_getPendingTransactions(multisig_account: string): ViewArgs {
+export function multisigAccount_getPendingTransactions(
+  multisig_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multisig_account::get_pending_transactions",
@@ -2819,7 +2964,9 @@ export function multisigAccount_getPendingTransactions(multisig_account: string)
  * @param creator address
  * @returns ViewArgs
  */
-export function multisigAccount_getNextMultisigAccountAddress(creator: string): ViewArgs {
+export function multisigAccount_getNextMultisigAccountAddress(
+  creator: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multisig_account::get_next_multisig_account_address",
@@ -2833,7 +2980,9 @@ export function multisigAccount_getNextMultisigAccountAddress(creator: string): 
  * @param multisig_account address
  * @returns ViewArgs
  */
-export function multisigAccount_lastResolvedSequenceNumber(multisig_account: string): ViewArgs {
+export function multisigAccount_lastResolvedSequenceNumber(
+  multisig_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multisig_account::last_resolved_sequence_number",
@@ -2847,7 +2996,9 @@ export function multisigAccount_lastResolvedSequenceNumber(multisig_account: str
  * @param multisig_account address
  * @returns ViewArgs
  */
-export function multisigAccount_nextSequenceNumber(multisig_account: string): ViewArgs {
+export function multisigAccount_nextSequenceNumber(
+  multisig_account: string,
+): ViewArgs {
   return {
     payload: {
       function: "0x1::multisig_account::next_sequence_number",
