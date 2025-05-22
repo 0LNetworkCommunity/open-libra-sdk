@@ -4,9 +4,9 @@ import {
   extractViewFunctions,
   generateViewTypes,
   viewFunctionToViewArgs,
-} from "../src/codegen/parseViewFunctions";
+} from "../../src/codegen/parseViewFunctions";
 
-const FIXTURES_DIR = path.join(__dirname, "fixtures");
+const FIXTURES_DIR = path.join(__dirname, "../fixtures");
 
 // Test extracting view functions from example.move
 

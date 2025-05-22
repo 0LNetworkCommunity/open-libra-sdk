@@ -2,30 +2,29 @@ import { test, expect } from "bun:test";
 import path from "path";
 import fs from "fs";
 import os from "os";
-import { generateSugar } from "../src/codegen/parseViewFunctions";
+import { generate } from "../../src/codegen/parseViewFunctions";
 
-const FIXTURES_DIR = path.join(__dirname, "fixtures");
+const FIXTURES_DIR = path.join(__dirname, "../fixtures");
 
-test("generateSugar() writes a valid TypeScript file with sugar functions that compiles", () => {
+test("generate() writes a valid TypeScript file that compiles", () => {
   // Create a temp directory
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "viewgen-sugar-test"));
-  const outFile = path.join(tmpDir, "viewFunctionsSugar.ts");
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "viewgen-test"));
+  const outFile = path.join(tmpDir, "viewFunctionDefinitions.ts");
 
   // Calculate relative import path from generated file to src/types/clientPayloads
   const relImport = path
-    .relative(tmpDir, path.join(__dirname, "../src/types/clientPayloads"))
+    .relative(tmpDir, path.join(__dirname, "../../src/types/clientPayloads"))
     .replace(/\\/g, "/");
   const importPath = relImport.startsWith(".") ? relImport : "./" + relImport;
 
   // Generate the file with the correct import path
-  // generateSugar expects only 2 arguments: moveDir, outFile
-  // so pass only those for the test
-  generateSugar(FIXTURES_DIR, outFile, importPath);
+  generate(FIXTURES_DIR, outFile, importPath);
 
   // Check file exists
   expect(fs.existsSync(outFile)).toBe(true);
 
   // Try to compile the generated file with tsc
+  // Use the same tsconfig as the project, but only check the generated file
   const tscPath = path.join(
     __dirname,
     "..",
