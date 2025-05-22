@@ -274,3 +274,35 @@ End to end tests will start a local testnet before each test, and requires `dock
 
 ### Documentation
 The examples references in README.md must all be tested at: `./tests/e2e_tests/docs.tests.ts`
+
+## Updating the View Function Sugar File (For Core Maintainers)
+
+Before each release, you should regenerate the TypeScript view function sugar file to ensure it reflects the latest Move modules and view functions.
+
+### Steps:
+
+1. **Ensure your Move source files are up to date.**
+   - The script expects a directory containing your `.move` files (e.g., `./my-move-modules`).
+
+2. **Run the codegen script:**
+
+   ```sh
+   bun ./scripts/viewCodeGen.ts <PATH_TO_MOVE_DIR>
+   ```
+   - Replace `<PATH_TO_MOVE_DIR>` with the path to your Move modules directory.
+   - Example:
+     ```sh
+     bun ./scripts/viewCodeGen.ts ./my-move-modules
+     ```
+
+3. **Check the output:**
+   - The generated file will be at `./src/views/viewFunctionsSugar.ts`.
+   - Review the file for correctness if needed.
+
+4. **Commit the updated file:**
+   - Add and commit `src/views/viewFunctionsSugar.ts` to your release branch.
+
+### Notes
+- The script will overwrite the existing sugar file.
+- If you add, remove, or change any `#[view]` functions in your Move code, you must regenerate this file before release.
+- The generated file uses local imports for development and will work out of the box with the rest of the TypeScript SDK.
