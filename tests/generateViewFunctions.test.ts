@@ -31,7 +31,7 @@ test("generate() writes a valid TypeScript file that compiles", () => {
     "..",
     "node_modules",
     ".bin",
-    "tsc"
+    "tsc",
   );
   // Fallback to global tsc if not found
   const tscCmd = fs.existsSync(tscPath) ? tscPath : "tsc";
@@ -40,7 +40,7 @@ test("generate() writes a valid TypeScript file that compiles", () => {
     "--strict",
     "--noEmit",
     outFile,
-    "--skipLibCheck"
+    "--skipLibCheck",
   ]);
   if (result.exitCode !== 0) {
     console.error("TSC STDERR:\n", result.stderr.toString());

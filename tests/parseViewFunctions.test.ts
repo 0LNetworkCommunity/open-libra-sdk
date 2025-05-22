@@ -1,6 +1,10 @@
 import { expect, test } from "bun:test";
 import path from "path";
-import { extractViewFunctions, generateViewTypes, viewFunctionToViewArgs } from "../src/codegen/parseViewFunctions";
+import {
+  extractViewFunctions,
+  generateViewTypes,
+  viewFunctionToViewArgs,
+} from "../src/codegen/parseViewFunctions";
 
 const FIXTURES_DIR = path.join(__dirname, "fixtures");
 
@@ -47,6 +51,8 @@ test("viewFunctionToViewArgs generates correct ViewArgs payloads", () => {
   // get_voting_duration_secs takes no arguments
   const getVoting = views.find((v) => v.name === "get_voting_duration_secs");
   const payload2 = viewFunctionToViewArgs(getVoting!);
-  expect(payload2.payload.function).toBe("0x1::example::get_voting_duration_secs");
+  expect(payload2.payload.function).toBe(
+    "0x1::example::get_voting_duration_secs",
+  );
   expect(payload2.payload.functionArguments).toEqual([]);
 });

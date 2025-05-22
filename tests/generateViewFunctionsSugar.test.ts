@@ -12,7 +12,9 @@ test("generateSugar() writes a valid TypeScript file with sugar functions that c
   const outFile = path.join(tmpDir, "viewFunctionsSugar.ts");
 
   // Calculate relative import path from generated file to src/types/clientPayloads
-  const relImport = path.relative(tmpDir, path.join(__dirname, "../src/types/clientPayloads")).replace(/\\/g, "/");
+  const relImport = path
+    .relative(tmpDir, path.join(__dirname, "../src/types/clientPayloads"))
+    .replace(/\\/g, "/");
   const importPath = relImport.startsWith(".") ? relImport : "./" + relImport;
 
   // Generate the file with the correct import path
@@ -30,7 +32,7 @@ test("generateSugar() writes a valid TypeScript file with sugar functions that c
     "..",
     "node_modules",
     ".bin",
-    "tsc"
+    "tsc",
   );
   // Fallback to global tsc if not found
   const tscCmd = fs.existsSync(tscPath) ? tscPath : "tsc";
@@ -39,7 +41,7 @@ test("generateSugar() writes a valid TypeScript file with sugar functions that c
     "--strict",
     "--noEmit",
     outFile,
-    "--skipLibCheck"
+    "--skipLibCheck",
   ]);
   if (result.exitCode !== 0) {
     console.error("TSC STDERR:\n", result.stderr.toString());
