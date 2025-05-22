@@ -23,6 +23,11 @@ test("generate() writes a valid TypeScript file that compiles", () => {
   // Check file exists
   expect(fs.existsSync(outFile)).toBe(true);
 
+  // Check that the generated file exports the expected constant names (camelCase, not PascalCase)
+  const generated = fs.readFileSync(outFile, "utf8");
+  expect(generated).toMatch(/export const getVotingDurationSecsView:/i);
+  expect(generated).toMatch(/export const isResolvedView:/i);
+
   // Try to compile the generated file with tsc
   // Use the same tsconfig as the project, but only check the generated file
   const tscPath = path.join(

@@ -4,7 +4,10 @@ import {
   extractViewFunctions,
   generateViewTypes,
   viewFunctionToViewArgs,
+  generateSugar,
 } from "../../src/codegen/parseViewFunctions";
+import fs from "fs";
+import os from "os";
 
 const FIXTURES_DIR = path.join(__dirname, "../fixtures");
 
@@ -55,4 +58,20 @@ test("viewFunctionToViewArgs generates correct ViewArgs payloads", () => {
     "0x1::example::get_voting_duration_secs",
   );
   expect(payload2.payload.functionArguments).toEqual([]);
+});
+
+// Add test for sugar function naming convention
+test("generateSugar() writes TS functions with correct camelCase module_function names", () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "viewgen-sugar-test"));
+  const outFile = path.join(tmpDir, "viewFunctionsSugar.ts");
+  const relImport = path
+    .relative(tmpDir, path.join(__dirname, "../../src/types/clientPayloads"))
+    .replace(/\\/g, "/");
+  const importPath = relImport.startsWith(".") ? relImport : "./" + relImport;
+  generateSugar(FIXTURES_DIR, outFile, importPath);
+  const generated = fs.readFileSync(outFile, "utf8");
+  // Should export functions like example_isResolved and example_getVotingDurationSecs
+  expect(generated).toMatch(/export function example_isResolved\(/);
+  expect(generated).toMatch(/export function example_getVotingDurationSecs\(/);
+  fs.rmSync(tmpDir, { recursive: true, force: true });
 });
