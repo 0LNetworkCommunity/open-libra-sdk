@@ -125,7 +125,7 @@ export function viewFunctionToViewArgs(
 export function generate(
   moveDir: string,
   outFile: string,
-  importPath = "open-libra-sdk/types/clientPayloads",
+  importPath = "../types/clientPayloads",
 ) {
   const views = extractViewFunctions(moveDir);
   const lines: string[] = [];
@@ -170,7 +170,7 @@ export function generate(
 export function generateSugar(
   moveDir: string,
   outFile: string,
-  importPath = "open-libra-sdk/types/clientPayloads",
+  importPath = '../types/clientPayloads',
 ) {
   const views = extractViewFunctions(moveDir);
   const lines: string[] = [];
