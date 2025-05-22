@@ -3,6 +3,7 @@ import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 import { DOCKER_URL, LibraClient } from "../../src/client/client";
 import { Network } from "@aptos-labs/ts-sdk";
 import { currentValidatorsPayload } from "../../src/payloads/validators";
+import * as LibraViews from "../../src/views/viewFunctionsSugar";
 
 beforeAll(async () => {
   console.log("testnet setup");
@@ -32,19 +33,12 @@ test("can get validators", async () => {
   console.log(vals);
 });
 
-// test("can get balance", async () => {
-//   console.log("Calling Libra Explorer API");
-//   const client = new LibraClient();
-//   await client.connect();
-//   client.assertReady();
-
-//   const res = await client.getIndex();
-
-//   // testnet is 2
-//   expect(res.chain_id).toBe(2);
-//   const b = accountBalancePayload(
-//     "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
-//   );
-//   const p = await client.postViewFunc(b);
-//   expect(Number(p[0])).toBeGreaterThan(0);
-// });
+test("can get validators using viewFunctionsSugar", async () => {
+  const client = new LibraClient(Network.TESTNET, DOCKER_URL);
+  // Use the sugar function to craft the payload
+  const payload = LibraViews.validatorUniverse_getEligibleValidators();
+  const vals = await client.general.viewJson(payload);
+  console.log(vals);
+  expect(Array.isArray(vals)).toBe(true);
+  expect(vals.length).toBeGreaterThan(0);
+});
