@@ -22,7 +22,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "browser": "./dist/browser/index.js",
-      "react-native": "./dist/esm/index.mjs",
+      "react-native": "./dist/browser/index.js",
       "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.cjs",
       "default": "./dist/esm/index.mjs"
