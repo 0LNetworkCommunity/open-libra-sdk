@@ -10,6 +10,7 @@ import {
   generateMnemonic,
   publicKeyToAuthKey,
 } from "../src/crypto/keyFactory";
+import { LibraWallet } from "../src/wallet/libraWallet";
 import { ALICE_MNEM } from "../src/local_testnet/fixture_mnemonics";
 
 test("keygen mnemonic", async () => {
@@ -86,4 +87,11 @@ test("signs a message with single signer ed25519 scheme and verifies successfull
   expect(
     edAccount.verifySignature({ message: messageEncoded, signature }),
   ).toBeTruthy();
+});
+
+test("LibraWallet.fromMnemonic creates same wallet as mnemonicToAccountObj", () => {
+  const wallet = LibraWallet.fromMnemonic(ALICE_MNEM);
+  const accObj = mnemonicToAccountObj(ALICE_MNEM);
+
+  expect(wallet.getAddress().toString()).toBe(accObj.accountAddress.toString());
 });
