@@ -51,31 +51,31 @@ npm install open-libra-sdk
 You may not need to instantiate a wallet to check the chain status. Below you can check you can connect to a fullnode, and get the API index with latest block info
 
 ```typescript
-  import { LibraClient, Network,  } from 'open-libra-sdk'
+    import { LibraClient, Network } from 'open-libra-sdk'
 
-  const TESTNET_URL = "https://testnet.openlibra.io/v1";
+    const TESTNET_URL = "https://testnet.openlibra.io/v1";
 
-  // for mainnet
-  const client_mainnet = new LibraClient();
-  // local testnet
-  const client_testnet = new LibraClient(Network.TESTNET, TESTNET_URL);
+    // for mainnet
+    const client_mainnet = new LibraClient();
+    // local testnet
+    const client_testnet = new LibraClient(Network.TESTNET, TESTNET_URL);
 
-  const ledgerInfo = await client_testnet.getLedgerInfo();
-  console.log("block height:", ledgerInfo.block_height);
+    const ledgerInfo = await client_testnet.getLedgerInfo();
+    console.log("block height:", ledgerInfo.block_height);
 
-  expect(Number(ledgerInfo.block_height)).toBeGreaterThan(0);
+    expect(Number(ledgerInfo.block_height)).toBeGreaterThan(0);
 
-  // Advanced:
-  // You can reuse this client instance to create a LibraWallet instance for a user.
-  // First get the Ed25519Account type, in this case generated:
-  const edAccount = Ed25519Account.generate()
-  // then init a wallet
-  const wallet = LibraWallet.fromPrivateKey(edAccount.accountAddress, edAccount.privateKey, client_testnet);
+    // Advanced:
+    // You can reuse this client instance to create a LibraWallet instance for a user.
+    // First get the Ed25519Account type, in this case generated:
+    const edAccount = Ed25519Account.generate()
+    // then init a wallet
+    const wallet = LibraWallet.fromPrivateKey(edAccount.accountAddress, edAccount.privateKey, client_testnet);
 
-  // now you can use the wallet to interact with the chain
+    // now you can use the wallet to interact with the chain
 
-  const id = await wallet.client?.general.getChainId();
-  console.log("chain id:", id);
+    const id = await wallet.client?.general.getChainId();
+    console.log("chain id:", id);
 ```
 
 
@@ -84,27 +84,22 @@ You may not need to instantiate a wallet to check the chain status. Below you ca
 You can easily query the latest blocks and transaction versions using the SDK helpers:
 
 ```typescript
-import { LibraClient, Network } from "open-libra-sdk";
-import { getLatestBlocks, getLatestTxVersions } from "./src/ledger/ledgerInfo";
+    import { LibraClient, Network, getLatestBlocks, getLatestTxVersions } from "open-libra-sdk";
 
-const main = async () => {
-  // Create a client for MAINNET (or TESTNET, as needed)
-  const client = new LibraClient(Network.MAINNET);
+    // Create a client for MAINNET (or TESTNET, as needed)
+    const client = new LibraClient(Network.MAINNET);
 
-  // Query the latest 5 blocks
-  const latestBlocks = await getLatestBlocks(client, 5);
-  console.log("Latest 5 blocks:\n", JSON.stringify(latestBlocks, null, 2));
+    // Query the latest 5 blocks
+    const latestBlocks = await getLatestBlocks(client, 5);
+    console.log("Latest 5 blocks:\n", JSON.stringify(latestBlocks, null, 2));
 
-  // Query the latest 5 transaction versions (all types)
-  const latestVersions = await getLatestTxVersions(client, 5, false);
-  console.log("Latest 5 transaction versions (all types):\n", JSON.stringify(latestVersions, null, 2));
+    // Query the latest 5 transaction versions (all types)
+    const latestVersions = await getLatestTxVersions(client, 5, false);
+    console.log("Latest 5 transaction versions (all types):\n", JSON.stringify(latestVersions, null, 2));
 
-  // Query the latest 5 user transactions only
-  const latestUserTxs = await getLatestTxVersions(client, 5, true);
-  console.log("Latest 5 user transactions only:\n", JSON.stringify(latestUserTxs, null, 2));
-};
-
-main().catch(console.error);
+    // Query the latest 5 user transactions only
+    const latestUserTxs = await getLatestTxVersions(client, 5, true);
+    console.log("Latest 5 user transactions only:\n", JSON.stringify(latestUserTxs, null, 2));
 ```
 
 #### Initialize a wallet
@@ -203,25 +198,25 @@ Or use the `transfer` helper for simple account transfers.
 You can define a Typescript type, and the Libra.getResource will coerce the type in typescript
 
 ```typescript
-import { LibraClient, Network } from 'open-libra-sdk'
+    import { LibraClient, Network } from 'open-libra-sdk'
 
-const TESTNET_URL = "https://testnet.openlibra.io/v1";
-const libra = new LibraClient(Network.TESTNET, TESTNET_URL);
+    const TESTNET_URL = "https://testnet.openlibra.io/v1";
+    const libra = new LibraClient(Network.TESTNET, TESTNET_URL);
 
-interface Coin {
-  coin: {
-    value: number;
-  };
-}
+    interface Coin {
+      coin: {
+        value: number;
+      };
+    }
 
-const res = await libra.getResource<Coin>(
-  // alice
-  "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
-  "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
-);
-if (res.coin.value == 0) {
-  throw "no coin found"
-}
+    const res = await libra.getResource<Coin>(
+      // alice
+      "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
+      "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
+    );
+    if (res.coin.value == 0) {
+      throw "no coin found"
+    }
 ```
 
 ## Troubleshooting
@@ -235,31 +230,31 @@ Look in the `./examples` folder for commonjs, Node, and typescript imports of th
 In a common JS file you can import the sdk to manage wallets
 and query the chain. See the minimal example:
 ```typescript
-// Example for how common js would import the sdk
+    // Example for how common js would import the sdk
 
-const libraSDK = require('open-libra-sdk');
+    const libraSDK = require('open-libra-sdk');
 
-const main = async () => {
-  const mnem = libraSDK.generateMnemonic();
-  console.log("Generate a mnemonic:\n");
+    const main = async () => {
+      const mnem = libraSDK.generateMnemonic();
+      console.log("Generate a mnemonic:\n");
 
-  console.log(mnem, "\n");
+      console.log(mnem, "\n");
 
-  let coldWallet = libraSDK.LibraWallet.fromMnemonic(mnem);
-  console.log(coldWallet.getAddress().toStringLong())
+      let coldWallet = libraSDK.LibraWallet.fromMnemonic(mnem);
+      console.log(coldWallet.getAddress().toStringLong())
 
-  let client = new libraSDK.LibraClient(libraSDK.Network.MAINNET);
-  console.log(`Client created for: ${client.config.network}`);
+      let client = new libraSDK.LibraClient(libraSDK.Network.MAINNET);
+      console.log(`Client created for: ${client.config.network}`);
 
-  // call a view function with a helper object that contains the
-  // payload for querying the current validators
+      // call a view function with a helper object that contains the
+      // payload for querying the current validators
 
-  // let vals = await client.general.viewJson(libraSDK.currentValidatorsPayload);
-  // console.log(vals);
+      // let vals = await client.general.viewJson(libraSDK.currentValidatorsPayload);
+      // console.log(vals);
 
-}
+    }
 
-main()
+    main()
 
 ```
 
