@@ -14,7 +14,7 @@ import {
 import { addressFromString } from "../crypto/keyFactory";
 import { submitTransactionDiem } from "../transaction/submit";
 
-export const MAINNET_URL: string = "https://rpc.scan.openlibra.world/v1";
+export const MAINNET_URL: string = "https://rpc.scan.openlibra.io/v1";
 export const TESTNET_URL: string = "http://testnet.openlibra.io:8080/v1";
 // local e2e tests connection, libra-alice in local testnet
 export const DOCKER_URL: string = "http://localhost:8280/v1";

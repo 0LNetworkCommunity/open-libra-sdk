@@ -1,14 +1,16 @@
+
 # open-libra-sdk
 
 A minimalist Typescript library for interacting with the Open Libra blockchain.
 
-```
+```bash
 npm install open-libra-sdk
 ```
+
 [https://www.npmjs.com/package/open-libra-sdk](https://www.npmjs.com/package/open-libra-sdk)
 
 ### Quick Start
-```
+```typescript
     // Uses LibraWallet for common account operations
     import { LibraWallet, Network, addressFromString } from 'open-libra-sdk'
 
@@ -43,70 +45,66 @@ npm install open-libra-sdk
     }
 ```
 
-## Common Transactions
+## Common Operations
 
 #### Create a client
 You may not need to instantiate a wallet to check the chain status. Below you can check you can connect to a fullnode, and get the API index with latest block info
 
-```
-  import { LibraClient, Network,  } from 'open-libra-sdk'
-
-  const TESTNET_URL = "https://testnet.openlibra.io/v1";
-
-  // for mainnet
-  const client_mainnet = new LibraClient();
-  // local testnet
-  const client_testnet = new LibraClient(Network.TESTNET, TESTNET_URL);
-
-  const ledgerInfo = await client_testnet.getLedgerInfo();
-  console.log("block height:", ledgerInfo.block_height);
-
-  expect(Number(ledgerInfo.block_height)).toBeGreaterThan(0);
-
-  // Advanced:
-  // You can reuse this client instance to create a LibraWallet instance for a user.
-  // First get the Ed25519Account type, in this case generated:
-  const edAccount = Ed25519Account.generate()
-  // then init a wallet
-  const wallet = LibraWallet.fromPrivateKey(edAccount.accountAddress, edAccount.privateKey, client_testnet);
-
-  // now you can use the wallet to interact with the chain
-
-  const id = await wallet.client?.general.getChainId();
-  console.log("chain id:", id);
-```
-
-#### Fetch Some Data
-
-You can define a Type, and the Libra.getResource will coerce the type in typescript
-
-```
-
-    import { LibraClient, Network,  } from 'open-libra-sdk'
+```typescript
+    import { LibraClient, Network } from 'open-libra-sdk'
 
     const TESTNET_URL = "https://testnet.openlibra.io/v1";
-    const libra = new LibraClient(Network.TESTNET, TESTNET_URL);
 
-    interface Coin {
-      coin: {
-        value: number;
-      };
-    }
+    // for mainnet
+    const client_mainnet = new LibraClient();
+    // local testnet
+    const client_testnet = new LibraClient(Network.TESTNET, TESTNET_URL);
 
-    const res = await libra.getResource<Coin>(
-      // alice
-      "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
-      "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
-    );
-    if (res.coin.value == 0) {
-      throw "no coin found"
-    }
+    const ledgerInfo = await client_testnet.getLedgerInfo();
+    console.log("block height:", ledgerInfo.block_height);
 
+    expect(Number(ledgerInfo.block_height)).toBeGreaterThan(0);
+
+    // Advanced:
+    // You can reuse this client instance to create a LibraWallet instance for a user.
+    // First get the Ed25519Account type, in this case generated:
+    const edAccount = Ed25519Account.generate()
+    // then init a wallet
+    const wallet = LibraWallet.fromPrivateKey(edAccount.accountAddress, edAccount.privateKey, client_testnet);
+
+    // now you can use the wallet to interact with the chain
+
+    const id = await wallet.client?.general.getChainId();
+    console.log("chain id:", id);
+```
+
+
+#### Querying Latest Blocks and Transaction Versions
+
+You can easily query the latest blocks and transaction versions using the SDK helpers:
+
+```typescript
+    import { LibraClient, Network, getLatestBlocks, getLatestTxVersions } from "open-libra-sdk";
+
+    // Create a client for MAINNET (or TESTNET, as needed)
+    const client = new LibraClient(Network.MAINNET);
+
+    // Query the latest 5 blocks
+    const latestBlocks = await getLatestBlocks(client, 5);
+    console.log("Latest 5 blocks:\n", JSON.stringify(latestBlocks, null, 2));
+
+    // Query the latest 5 transaction versions (all types)
+    const latestVersions = await getLatestTxVersions(client, 5, false);
+    console.log("Latest 5 transaction versions (all types):\n", JSON.stringify(latestVersions, null, 2));
+
+    // Query the latest 5 user transactions only
+    const latestUserTxs = await getLatestTxVersions(client, 5, true);
+    console.log("Latest 5 user transactions only:\n", JSON.stringify(latestUserTxs, null, 2));
 ```
 
 #### Initialize a wallet
 
-```
+```typescript
     // You can construct the wallet object for offline (cold wallet)
     // cases as well as online wallets to update state and submit transactions
 
@@ -158,7 +156,7 @@ You can define a Type, and the Libra.getResource will coerce the type in typescr
 #### Build transactions for Entry Functions
 Using the same wallet function above you can build arbitrary "entry functions" which call onchain smart contracts.
 
-```
+```typescript
     // ... continued from above
 
     const tx = await testnetHotWallet.buildTransaction(
@@ -180,8 +178,7 @@ Using the same wallet function above you can build arbitrary "entry functions" w
 
 Or use the `transfer` helper for simple account transfers.
 
-```
-
+```typescript
     // ... continued from above
     // remember to update the account sequence number like so:
     await testnetHotWallet.syncOnchain();
@@ -196,6 +193,32 @@ Or use the `transfer` helper for simple account transfers.
     }
 ```
 
+#### Fetch Arbitrary Data
+
+You can define a Typescript type, and the Libra.getResource will coerce the type in typescript
+
+```typescript
+    import { LibraClient, Network } from 'open-libra-sdk'
+
+    const TESTNET_URL = "https://testnet.openlibra.io/v1";
+    const libra = new LibraClient(Network.TESTNET, TESTNET_URL);
+
+    interface Coin {
+      coin: {
+        value: number;
+      };
+    }
+
+    const res = await libra.getResource<Coin>(
+      // alice
+      "0x87515d94a244235a1433d7117bc0cb154c613c2f4b1e67ca8d98a542ee3f59f5",
+      "0x1::coin::CoinStore<0x1::libra_coin::LibraCoin>",
+    );
+    if (res.coin.value == 0) {
+      throw "no coin found"
+    }
+```
+
 ## Troubleshooting
 There's a known issue when executing using `bun`. Calling a fullnode with an `https` url API will fail. Since http/2 is not fully developed in `bun` as of 1.2.2.
 
@@ -206,32 +229,32 @@ Look in the `./examples` folder for commonjs, Node, and typescript imports of th
 
 In a common JS file you can import the sdk to manage wallets
 and query the chain. See the minimal example:
-```
-// Example for how common js would import the sdk
+```typescript
+    // Example for how common js would import the sdk
 
-const libraSDK = require('open-libra-sdk');
+    const libraSDK = require('open-libra-sdk');
 
-const main = async () => {
-  const mnem = libraSDK.generateMnemonic();
-  console.log("Generate a mnemonic:\n");
+    const main = async () => {
+      const mnem = libraSDK.generateMnemonic();
+      console.log("Generate a mnemonic:\n");
 
-  console.log(mnem, "\n");
+      console.log(mnem, "\n");
 
-  let coldWallet = libraSDK.LibraWallet.fromMnemonic(mnem);
-  console.log(coldWallet.getAddress().toStringLong())
+      let coldWallet = libraSDK.LibraWallet.fromMnemonic(mnem);
+      console.log(coldWallet.getAddress().toStringLong())
 
-  let client = new libraSDK.LibraClient(libraSDK.Network.MAINNET);
-  console.log(`Client created for: ${client.config.network}`);
+      let client = new libraSDK.LibraClient(libraSDK.Network.MAINNET);
+      console.log(`Client created for: ${client.config.network}`);
 
-  // call a view function with a helper object that contains the
-  // payload for querying the current validators
+      // call a view function with a helper object that contains the
+      // payload for querying the current validators
 
-  // let vals = await client.general.viewJson(libraSDK.currentValidatorsPayload);
-  // console.log(vals);
+      // let vals = await client.general.viewJson(libraSDK.currentValidatorsPayload);
+      // console.log(vals);
 
-}
+    }
 
-main()
+    main()
 
 ```
 
@@ -239,7 +262,7 @@ main()
 Start a containerized testnet with docker etc.
 This repo contains a `tests/support/container/compose.yml` which will create a three node testnet with production binaries.
 
-```
+```bash
 # with npm/yarn/bun:
 bun run testnet
 bun run testnet-down
