@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, expect, test } from "bun:test";
+
 import { testnetDown, testnetUp } from "../../src/local_testnet/compose";
 import { DOCKER_URL, LibraClient } from "../../src/client/client";
 import { Network } from "@aptos-labs/ts-sdk";
