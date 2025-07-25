@@ -1,10 +1,12 @@
 // Example for how to use LibraViews to craft a view query in TypeScript/ESM
+// NOTE: there's a known issue with `bun` which doesn't support the underlying HTTP client used by `LibraClient`.
 
 import { getLatestBlocks, getLatestTxVersions, LibraClient, LibraViews, Network } from "open-libra-sdk";
 
 const main = async () => {
   // Create a client
-  const client = new LibraClient(Network.MAINNET);
+  console.log("Creating LibraClient for MAINNET");
+  const client = new LibraClient(Network.MAINNET, "https://rpc.scan.openlibra.io/v1");
 
   // Query the latest 5 blocks
   const latestBlocks = await getLatestBlocks(client, 5);
